@@ -1,0 +1,65 @@
+{% extends "base/main.html" %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>{{ page_title }}</h1>
+          </div>
+
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">فرم ثبت اطلاعات</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="post">
+              <div class="card-body">
+                <fieldset  {% if not request.user.editable%}disabled{% endif %}>
+                        {% include 'base/base_submit_form_alert.html' %}
+                        <div class="row">
+                           {% block form_data %}هیچ فرمی وجود ندارد{% endblock %}
+                        </div>
+
+
+                    <!-- /.card-body -->
+                    <br>
+               </fieldset>
+                <div class="card-footer">
+
+                {% block button %}
+                    {% if previous_page %}
+                        <a href="{{ previous_page }}" class="btn  btn-outline-info">فرم قبلی</a>
+                    {% endif %}
+                    <button type="submit" class="btn btn-success" {% if not request.user.editable%}disabled{% endif %}>ثبت اطلاعات</button>
+                     {% if next_page %}
+                        <a href="{{ next_page }}" class="btn btn-outline-info">فرم بعدی</a>
+                    {% endif %}
+                {% endblock %}
+                </div>
+                    </div>
+
+              </form>
+            </div>
+            </div>
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+{% endblock %}

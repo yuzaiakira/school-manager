@@ -1,0 +1,134 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% load accounts_tags %}
+{% load jformat %}
+{% block titlepage %}{{info.student.first_name|default_if_none:""}} {{ info.student.last_name|default_if_none:"" }}{% endblock %}
+
+{% block basecontent %}
+
+
+
+            <div class="card mb-3">
+                <div class="card-header position-relative min-vh-25 mb-7">
+                    <div class="bg-holder rounded-3 rounded-bottom-0" style="background-image:url({% static 'accounts/assets/img/generic/4.jpg'%});"></div>
+                    <!--/.bg-holder-->
+                    <div class="avatar avatar-5xl avatar-profile"><img class="rounded-circle img-thumbnail shadow-sm" src="{% static 'accounts/assets/img/user.png'%}" width="200" alt=""></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h4 class="mb-1">{{info.student.first_name|default_if_none:""}} {{ info.student.last_name|default_if_none:"" }}</h4>
+                            <p class="text-500">{{info.student.group.group}}</p>
+                            <div class="border-dashed-bottom my-4 d-lg-none"></div>
+                        </div>
+
+                        <div class="col ps-2 ps-lg-3">
+                            <a class="btn btn-falcon-primary d-block" href="{% url 'student-info' info.pk %}">مشاهده مشخصات</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+    <div class="card mb-3">
+            <div class="card-body">
+
+              <div class="table-responsive scrollbar mt-4 fs--1">
+                <table class="table table-striped border-bottom">
+                  <thead class="light">
+                    <tr class="bg-primary text-white dark__bg-1000">
+                      <th class="border-0">شرح</th>
+                      <th class="border-0 text-center">مبلغ</th>
+                      <th class="border-0 text-end">تاریخ</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if History %}
+                    {% for his in History %}
+
+                        <tr>
+                          <td class="align-middle">
+                            <h6 class="mb-0 text-nowrap"><a href="{% url 'payment-details-update' his.pk %}">{{ his.description|default:"بدون عنوان" }}</a></h6>
+                          </td>
+                          <td class="align-middle text-center add-comma">{{ his.price }}</td>
+                          <td class="align-middle text-end" dir="ltr">{{ his.date|jformat:"%Y/%m/%d - %H:%M"  }}</td>
+                        </tr>
+
+                    {% endfor %}
+
+                  {% else %}
+                        <tr class="align-middle text-center">
+                          <td colspan="3" class="align-middle font-sans-serif fw-medium text-nowrap">کاربر تا کنون هیچ پرداختی انجام ندادید</td>
+                        </tr>
+                  {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="row justify-content-end">
+                  <div class="col-6">
+                    <br>
+                    <a class="btn btn-falcon-primary me-2 mb-1" href="{% url 'manage-student' total.user.StdInfoModel.pk %}">بازگشت</a>
+                    <a class="btn btn-success me-1 mb-1" href="{% url 'payment-details-add' total.pk %}">افزودن</a>
+                  </div>
+
+                <div class="col-6">
+                  <table class="table table-sm table-borderless fs--1 text-end">
+                    <tbody>
+                      <tr>
+                       <tr>
+                          <th class="text-sm-end">تعداد اقساط:</th>
+                          <td>{{ parts|default_if_none:"بدون اقساط" }}</td>
+                        </tr>
+                        <tr>
+                          <th class="text-sm-end">شهریه کل:</th>
+                          <td class="add-comma">{{ total.total_price.price }}</td>
+                        </tr>
+                        <tr>
+                          <th class="text-sm-end">شهریه پرداخت شده:</th>
+                          <td class="add-comma">{{ pays }}</td>
+                        </tr>
+
+                        <tr class="alert alert-success fw-bold">
+                          <th class="text-sm-end">باقی مانده:</th>
+                          <td class="add-comma">{{ over }}</td>
+                        </tr>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer bg-light">
+            </div>
+          </div>
+
+
+
+
+{% endblock %}
+
+{% block addscript %}
+
+    <script>
+        function add_comma(number) {
+            let str = number.toString().split('.');
+            if (str[0].length >= 5) {
+                str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+            }
+            if (str[1] && str[1].length >= 5) {
+                str[1] = str[1].replace(/(\d{3})/g, '$1 ');
+            }
+            return str.join('.');
+        }
+
+        document.querySelectorAll(".add-comma").forEach((element) => {
+            element.innerHTML = add_comma(element.innerHTML)
+        })
+    </script>
+
+{% endblock %}

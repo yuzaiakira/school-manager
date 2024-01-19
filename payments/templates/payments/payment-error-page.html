@@ -1,0 +1,27 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% block titlepage %}{{ title }}{% endblock %}
+{% block basecontent %}
+         
+
+                 <div class="card mb-3">
+                     <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url({% static 'accounts/assets/img/icons/spot-illustrations/corner-4.png'%});"></div>
+
+                     <div class="card-body position-relative">
+                         <div class="row">
+                             <div class="col-lg-8">
+                                 <h3>{{ title }}</h3>
+                                 <p class="mb-0">
+                                  {{ des }}
+                                 </p>
+                                 <p>
+                                    <br>
+                                    <a class="btn btn-falcon-primary me-1 mb-1" href="{% url 'account' %}">برگشت به خانه</a>
+                                 </p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+      
+{% endblock %}

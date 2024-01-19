@@ -1,0 +1,281 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% load jformat %}
+{% block titlepage %} صفحه دانش آموز{% endblock %}
+{% block addstyle %}
+    <link href="{% static 'accounts/vendors/flatpickr/flatpickr.min.css'%}" rel="stylesheet">
+    <style>
+      .toltr{
+         direction: ltr;
+         float: right;
+      }
+    </style>
+{% endblock %}
+{% block basecontent %}
+         <div class="card mb-3">
+            <div class="card-body d-flex flex-wrap flex-between-center">
+               <div>
+                  <h6 class="text-primary">سلام</h6>
+                  <h5 class="mb-0">{{info.name}}</h5>
+                 
+
+                
+               </div>
+            </div>
+         </div>
+         <div class="row g-3 mb-3">
+            <div class="col-xxl-6">
+               <div class="row g-3">
+                  <div class="col-12">
+                     <div class="card font-sans-serif">
+                        <div class="card-body d-flex gap-3 flex-column flex-sm-row align-items-center">
+                           <img class="rounded-3" src="{% static 'accounts/assets/img/user.png'%}" alt="" width="112">
+                           <table class="table table-borderless fs--1 fw-medium mb-0">
+                              <tbody>
+                                 <tr>
+                                    <td class="p-1" style="width: 35%;">آخرین بازید:</td>
+                                    <td class="p-1 text-600 toltr">{{info.last_login|jformat:"%Y/%m/%d - %H:%M:%S"}}</td>
+                                 </tr>
+                                 <tr>
+                                    <td class="p-1" style="width: 35%;">عضویت:</td>
+                                    <td class="p-1 text-600 toltr">{{info.date_joined}}</td>
+                                 </tr>
+                                 <tr>
+                                    <td class="p-1" style="width: 35%;">شماره شاد:</td>
+                                    <td class="p-1">
+                                    
+                                    {% if info.shad_num == None %}
+                                       ثبت نشده
+                                    {% else %}
+                                    {{info.shad_num}}
+                                    {% endif %}
+                                       
+
+                                    </td>
+                                 </tr>
+                              </tbody>
+                           </table>
+                           <div class="dropdown btn-reveal-trigger position-absolute top-0 end-0 m-3">
+                              <button class="btn btn-link btn-reveal text-600 btn-sm dropdown-toggle dropdown-caret-none" type="button" id="studentInfoDropdown" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--2"></span></button>
+                              <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="studentInfoDropdown">
+                                 <a class="dropdown-item" href="{% url 'profile' %}">دیدن پروفایل</a>
+                                 <div class="dropdown-divider"></div>
+                                 <a class="dropdown-item text-danger" href="{% url 'logout' %}">خروج</a>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  
+                  
+         
+
+
+
+
+
+
+
+         {% if not request.user.is_staff %}
+
+               <div class="card mb-3">
+                  <div class="card-header bg-light d-flex justify-content-between">
+                     <h5 class="mb-0">فعالیت های دانش آموز</h5>
+                  </div>
+                  <div class="card-body fs--1 p-0">
+                     {% if not reports %}
+                        
+                        <div class="alert alert-info border-2 d-flex align-items-center" role="alert" style="margin: 15px 10px;">
+                              <div class="bg-info me-3 icon-item"><span class="fas fa-info-circle text-white fs-3"></span></div>
+                              <p class="mb-0 flex-1">هیچ موردی ثبت نشده است</p>
+                        </div>
+                        
+                     
+                     {% else %}
+
+                        {% for report in reports %}
+                        
+                              <div class="border-bottom-0 notification rounded-0 border-x-0 border border-300">
+                                 <div class="notification-avatar">
+                                    <div class="avatar avatar-xl me-3">
+                                    
+                                    
+                                    </div>
+                                 </div>
+                                 <div class="notification-body">
+                                    
+                                    <p class="mb-1">
+                                          <strong>{% if report.title == '' or  report.title == None  %}وارد نشده{% else %}{{report.title}}{% endif %}</strong>
+                                          {% if report.score == '' or  report.score == None  %}{% else %}<small> ({{report.score}}) </small> {% endif %} </p>
+                                    {% if report.desc == '' or  report.desc == None  %}{% else %}<p class="mb-1" style="color:#939393;">{{report.desc}}</p>{% endif %}
+                                    {% if report.date == '' or  report.date == None  %}{% else %}<span class="notification-time">{{report.date}}</span>{% endif %}
+         
+   
+                                    
+
+
+                                 </div>
+                                 
+                              </div>
+
+                        {% endfor %}
+
+                     {% endif %}
+
+         
+                     
+                     
+
+                     
+                  </div>
+            </div>
+
+
+
+            <div class="card mb-3">
+                  <div class="card-header">
+                     <h5 class="mb-0">پرونده تربیتی دانش آموز</h5>
+                  </div>
+                  <div class="card-body bg-light">
+                     
+                     <h6 class="fs-0">موارد مثبت</h6>
+                     
+                     <table class="table table-bordered mt-3 bg-white dark__bg-1100">
+                        <thead>
+                        <tr class="fs--1">
+                              <th>کارها و فعالیت ها</th>
+                              <th>تعداد</th>
+                              <th>نمره متعلقه</th>
+                           
+                              
+                        </tr>
+                        </thead>
+                        <tbody>
+                           {% if not reports %}
+                              <tr>
+                                 
+                                 <td colspan="3" class="text-center align-middle">هیچ موردی ثبت نشده است
+
+                                 </td>
+                              
+                              </tr>
+                           {% else %}
+                              {% for good in educational.good %}
+                                 <tr>
+                                    <td>
+                                          <p>{{good.good|default_if_none:''}}</p>
+                                    </td>
+                                    <td>
+                                          <p>{{good.number|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+                                    <td>
+                                          <p>{{good.score|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+
+                                    
+                                    
+                                 </tr>
+
+                              {% endfor %}
+                           {% endif %}   
+                        </tbody>
+                     </table>
+
+                     <br>
+                     <hr>
+                     <br>
+                     <h6 class="fs-0">موارد منفی</h6>
+                     
+                     <table class="table table-bordered mt-3 bg-white dark__bg-1100">
+                        <thead>
+                        <tr class="fs--1">
+                              <th>کارها و فعالیت ها</th>
+                              <th>تعداد</th>
+                              <th>نمره متعلقه</th>
+                              
+                              
+                        </tr>
+                        </thead>
+                        <tbody>
+                           {% if not reports %}
+                              <tr>
+                                 
+                                 <td colspan="3" class="text-center align-middle">هیچ موردی ثبت نشده است
+
+                                 </td>
+                              
+                              </tr>
+                           {% else %}
+                              {% for bad in educational.bad %}
+                                 <tr>
+                                    <td>
+                                          <p>{{bad.bad|default_if_none:''}}</p>
+                                    </td>
+                                    <td>
+                                          <p>{{bad.number|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+                                    <td>
+                                          <p>{{bad.score|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+
+                                    
+                                    
+                                 </tr>
+
+                              {% endfor %}
+                           {% endif %}  
+                        </tbody>
+                     </table>
+                     
+
+                  </div>
+            </div>
+
+
+
+         {% endif %}
+
+
+      <div class="card mb-3">
+         <div class="card-header d-flex flex-between-center">
+            <h6 class="mb-0">نشریه مدرسه</h6>
+          
+         </div>
+         <div class="card-body p-0">
+           <div class="table-responsive scrollbar">
+             <table class="table mb-0 fs--1 border-200 overflow-hidden table-enrolled-courses">
+               <thead class="bg-light font-sans-serif">
+                 <tr class="text-800">
+                   <th class="fw-medium">عنوان</th>
+                   <th class="fw-medium">نویسنده</th>
+                   <th class="fw-medium">تاریخ انتشار</th>
+                   <th class="fw-medium">تاریخ اپدیت</th>
+
+                 </tr>
+               </thead>
+               
+               <tbody class="list">
+                  {% for post in blog %}
+                     <tr class="btn-reveal-trigger fw-semi-bold">
+                        <td class="align-middle white-space-nowrap title" style="max-width: 23rem;">
+                           <div class="d-flex gap-3 align-items-center position-relative"><img class="rounded-1 border border-200" src="{% if post.pic %}{{post.pic.url}}{% else %} {% static 'accounts/assets/img/no-image.png'%}{% endif %}" width="60" alt=""><a class="stretched-link text-truncate" href="{% url 'post' post.pk%}">{{post.title}}</a></div>
+                       </td>
+                     <td class="align-middle text-nowrap trainer"><a class="text-800" href="{% url 'post' post.pk%}">{{post.author.display_name}}</a></td>
+                     <td class="align-middle date">{{post.created_on}}</td>
+                     <td class="align-middle time">{{post.updated_on}}</td>
+                     
+                     </tr>
+                  {% endfor %}
+               </tbody>
+             </table>
+           </div>
+         </div>
+         <div class="card-footer bg-light py-2 text-center"><a class="btn btn-link btn-sm px-0 fw-medium" href="{% url 'blog' %}">نمایش همه<span class="fas fa-chevron-left ms-1 fs--2"></span></a></div>
+       </div>
+
+
+
+
+
+
+{% endblock %}

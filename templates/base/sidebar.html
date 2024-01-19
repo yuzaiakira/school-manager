@@ -1,0 +1,133 @@
+{% load static %}
+          <!-- Main Sidebar Container -->
+          <aside class="main-sidebar elevation-4 sidebar-light-primary">
+                <!-- Brand Logo -->
+                <a href="index3.html" class="brand-link">
+                  <span class="brand-text font-weight-light">{{request.site.name}}</span>
+                </a>
+
+                <!-- Sidebar -->
+                <div class="sidebar">
+                  <!-- Sidebar user panel (optional) -->
+                  <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                      <img src="{% static 'assets/img/user.png' %}" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                      <a href="#" class="d-block">{{request.user.site_display_name}}</a>
+                    </div>
+                  </div>
+
+                  <!-- Sidebar Menu -->
+                  <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+                      <!-- Add icons to the links using the .nav-icon class
+                           with font-awesome or any other icon font library -->
+                      <li class="nav-item">
+                        <a href="{% url 'accounts:home' %}" class="nav-link">
+                          <i class="nav-icon fas fa-home"></i>
+                          <p>خانه</p>
+                        </a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="{% url 'blog:archive' %}" class="nav-link">
+                          <i class="nav-icon fas fa-pen"></i>
+                          <p>نشریه مدرسه</p>
+                        </a>
+                      </li>
+                       <li class="nav-item menu-open">
+                        <a href="#" class="nav-link">
+                          <i class="nav-icon fas fa-mail-bulk"></i>
+                          <p>
+                            عملیات ثبت نام
+                            <i class="right fas fa-angle-left"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                            <a href="{% url 'accounts:profile' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>مشخصات دانش آموز</p>
+                            </a>
+                          </li>
+
+                          <li class="nav-item">
+                            <a href="{% url 'accounts:father' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>مشخصات پدر دانش آموز</p>
+                            </a>
+                          </li>
+
+                          <li class="nav-item">
+                            <a href="{% url 'accounts:mother' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>مشخصات مادر دانش آموز</p>
+                            </a>
+                          </li>
+
+                            <li class="nav-item">
+                            <a href="{% url 'accounts:supervisor' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>مشخصات سرپرست دانش آموز</p>
+                            </a>
+                          </li>
+
+
+                            <li class="nav-item">
+                            <a href="{% url 'accounts:lastschool' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>اطلاعات تحصیلی دانش آموز</p>
+                            </a>
+                          </li>
+                            <li class="nav-item">
+                            <a href="{% url 'accounts:competitions' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>سابقه فعالیت های مسابقات</p>
+                            </a>
+                          </li>
+
+
+                            <li class="nav-item">
+                            <a href="{% url 'accounts:shad' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>اطلاعات ارتباطی با دانش آموز</p>
+                            </a>
+                          </li>
+
+                          <li class="nav-item">
+                            <a href="{% url 'accounts:address' %}" class="nav-link">
+                              <i class="fas fa-check nav-icon"></i>
+                              <p>فرم ثبت نام پدر دانش آموز</p>
+                            </a>
+                          </li>
+
+
+
+
+                        </ul>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#" class="nav-link">
+                          <i class="nav-icon fas fa-user"></i>
+                          <p>
+                            حساب کاربری
+                            <i class="right fas fa-angle-left"></i>
+                          </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                          <li class="nav-item">
+                            <a href="{% url 'accounts:reset-password' %}" class="nav-link active">
+                              <i class="fas fa-key nav-icon"></i>
+                              <p>تغییر رمز عبور</p>
+                            </a>
+                          </li>
+
+                        </ul>
+                      </li>
+
+                    </ul>
+                  </nav>
+                  <!-- /.sidebar-menu -->
+                </div>
+                <!-- /.sidebar -->
+          </aside>

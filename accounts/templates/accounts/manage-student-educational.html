@@ -1,0 +1,80 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% block titlepage %} {{type}} پرونده تربیتی {{text}} دانش آموز {% endblock %}
+{% block addstyle %}
+    <link href="{% static 'accounts/vendors/flatpickr/flatpickr.min.css'%}" rel="stylesheet">
+
+{% endblock %}
+{% block basecontent %}
+         
+
+                  <div class="card mb-3">
+                     <div class="card-body d-flex flex-wrap flex-between-center">
+                        <div>
+                           <h6 class="text-primary">{{type}}</h6>
+                           <h5 class="mb-0">پرونده تربیتی {{text}} دانش آموز</h5>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="card mb-3">
+                     <div class="card-body position-relative">
+                        <form action="" method="POST" >
+                           <div class="row g-3">
+                              {%csrf_token %}
+	 	
+                              <div class="row g-3">
+
+                                    {% if educational.good %}
+                                       <div class="col-md-12">
+                                          <label class="form-label" >{{educational.good.label}}</label>
+                                          {{educational.good}}
+                                       </div>
+                                    {% else %}
+                                       <div class="col-md-12">
+                                          <label class="form-label" >{{educational.bad.label}}</label>
+                                          {{educational.bad}}
+                                       </div>
+                                    {% endif %}
+
+                                 <div class="col-md-6">
+                                  <label class="form-label" >{{educational.number.label}}</label>
+                                  {{educational.number}}
+                               </div>
+                               <div class="col-md-6">
+                                  <label class="form-label" >{{educational.score.label}}</label>
+                                  {{educational.score}}
+                               </div>
+                              
+
+                               <div class="col-md-12">
+                                 <button class="btn btn-success me-1 mb-1" type="submit">تایید</button>
+                                 <a class="btn btn-falcon-primary me-1 mb-1"href="{% url 'manage-student' student_id %}">بازگشت</a>
+                              </div>
+
+                              </div>
+                        </form>
+                     </div>
+                  </div>
+
+      
+{% endblock %}
+
+{% block addscript %}
+    <script src="{% static 'accounts/assets/js/jquery-3.6.4.min.js'%}"></script>
+    <script src="{% static 'accounts/assets/js/flatpickr.full.js'%}"></script>
+    
+    <script src="{% static 'accounts/assets/js/flatpickr.local-fa.js'%}"></script>
+    <script src="{% static 'accounts/assets/js/flatpickr.fa.js'%}"></script>
+    <script>
+      $(".datetimepicker").flatpickr(
+         {
+           
+            "locale": "fa",
+        }
+      );
+
+    </script>
+    
+{% endblock %}

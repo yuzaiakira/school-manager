@@ -1,0 +1,125 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% block titlepage %}نشریه مدرسه{% endblock %}
+{% block addstyle %}
+{% endblock %}
+
+{% block basecontent %}
+         <div class="card mb-3">
+            <div class="card-body d-flex flex-wrap flex-between-center">
+               <div>
+                  <h6 class="text-primary">نشریه</h6>
+                  <h5 class="mb-0">مدرسه</h5>
+                 
+               </div>
+            </div>
+         </div>
+         
+         
+      <div class="card mb-3">
+        <div class="card-body p-0">
+          <div class="table-responsive scrollbar">
+            <table class="table mb-0 fs--1 border-200 overflow-hidden table-enrolled-courses">
+              <thead class="bg-light font-sans-serif">
+                <tr class="text-800">
+                  <th class="fw-medium">عنوان</th>
+                  <th class="fw-medium">نویسنده</th>
+                  <th class="fw-medium">تاریخ انتشار</th>
+                  <th class="fw-medium">تاریخ اپدیت</th>
+
+                </tr>
+              </thead>
+              
+              <tbody class="list">
+                 {% for post in posts %}
+                    <tr class="btn-reveal-trigger fw-semi-bold">
+                        <td class="align-middle white-space-nowrap title" style="max-width: 23rem;">
+                            <div class="d-flex gap-3 align-items-center position-relative"><img class="rounded-1 border border-200" src="{% if post.pic %}{{post.pic.url}}{% else %} {% static 'accounts/assets/img/no-image.png'%}{% endif %}" width="60" alt=""><a class="stretched-link text-truncate" href="{% url 'post' post.pk%}">{{post.title}}</a></div>
+                        </td>
+                    <td class="align-middle text-nowrap trainer"><a class="text-800" href="{% url 'post' post.pk%}">{{post.author.display_name}}</a></td>
+                    <td class="align-middle date">{{post.created_on}}</td>
+                    <td class="align-middle time">{{post.updated_on}}</td>
+                    
+                    </tr>
+                 {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <br>
+        <br>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% if posts.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">صفحه قبل</a>
+                </li>
+                {% if posts.number > 3 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">1</a>
+                    </li>
+                        {% if posts.number > 4 %}
+                            <li class="page-item">
+                                <span>...</span>
+                            </li>
+                        {% endif %}
+                   
+                {% endif %}
+                {% endif %}
+                
+                {% for num in posts.paginator.page_range %}
+                {% if posts.number == num %}
+                    <li class="page-item active">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% elif num > posts.number|add:'-3' and num < posts.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+                {% endfor %}
+                
+                {% if posts.has_next %}
+                {% if posts.number < posts.paginator.num_pages|add:'-3' %}
+                    <li class="page-item">
+                        <span class="page-link">...</span>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.paginator.num_pages }}">{{ posts.paginator.num_pages }}</a>
+                    </li>
+                {% elif posts.number < posts.paginator.num_pages|add:'-2' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.paginator.num_pages }}">{{ posts.paginator.num_pages }}</a>
+                    </li>
+                {% endif %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ posts.next_page_number }}">صفحه بعد</a>
+                    </li>
+                {% endif %}
+    
+    
+            </ul>
+        </nav>
+
+      </div>
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

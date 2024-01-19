@@ -1,0 +1,37 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% load jformat %}
+{% block titlepage %}{{post.title}}{% endblock %}
+{% block addstyle %}
+{% endblock %}
+
+{% block basecontent %}
+         <div class="card mb-3">
+            <div class="card-body d-flex flex-wrap flex-between-center">
+               <div>
+                  <h1 class="mb-0">{{post.title}}</h1>
+
+                  <p class="mb-0">ایجاد شده در تاریخ: <span> {{post.created_on|jformat:"%Y/%m/%d" }}</span> توسط: {{post.author}}</p>
+               </div>
+            </div>
+         </div>
+         
+         
+         <div class="card mb-3">
+            <div class="card-body bg-light">
+               {{post.content|safe}}
+            </div>
+          </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

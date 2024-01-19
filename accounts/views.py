@@ -1,0 +1,550 @@
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, Http404
+from django.urls import reverse, reverse_lazy
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+
+from django.core.paginator import Paginator
+from django.views import View
+from django.views.generic.edit import DeleteView
+
+from accounts.forms import (StdSearchForm, StdReportForm, StdEducationalGoodForm, StdEducationalbadForm, StdGroupForm,
+                            StdUploadGroupForm, ResetPassWord)
+from accounts.models import UserModel, StdGroupModel, StdReportModel, StdEducationalModel
+from accounts.functions import import_csv_file
+
+from information.models import (StdInfoModel, FatherInfoModel, MatherInfoModel, SupervisorInfoModel, StdLastSchoolModel,
+                                StdCompetitionsModel, StdShadModel, StdPlaceInfoModel)
+
+from payments.models import UserPriceModel
+from payments.functions import price_peer_part
+from blog.models import PostModel
+
+from core.settings import REDIRECT_FIELD_NAME
+
+from jalali_date import datetime2jalali
+
+
+# Create your views here.
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME)
+def account_view(request):
+    # change is in to ==
+    if request.user.first_name == '' and request.user.last_name == '':
+        name = "به سایت خوش آمدید."
+    else:
+        name = request.user.first_name + " " + request.user.last_name
+        
+    post = PostModel.objects.all().order_by('-id')
+    paginator = Paginator(post, 10)    
+    result = paginator.page(1)
+    
+    context = {
+        'info': {
+                 'name': name,
+                 'last_login': datetime2jalali(request.user.last_login).strftime('%Y/%m/%d - %H:%M:%S'),
+                 'date_joined': datetime2jalali(request.user.date_joined).strftime('%Y/%m/%d - %H:%M:%S'),
+                 },
+        'blog': result
+    
+    }
+    if request.user.is_staff:
+      pass
+
+
+
+    return render(request, "accounts/home.html", context)
+
+
+class HomeAccount(View):
+    template_name = "accounts/home.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            return self.admin(request)
+
+        return self.client(request)
+
+    def client(self, request):
+        context = self.get_context_data()
+        context['reports'] = StdReportModel.objects.filter(student__id=request.user.StdInfoModel.id)
+        context['educational'] = StdEducationalModel.get_data(request.user.StdInfoModel.id)
+
+        return render(request, self.template_name, context)
+
+    def admin(self, request):
+        return render(request, self.template_name)
+
+    def get_context_data(self):
+        return dict()
+
+    
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            if request.GET.get(REDIRECT_FIELD_NAME):
+                return HttpResponseRedirect(request.GET.get(REDIRECT_FIELD_NAME))
+            else:
+                return HttpResponseRedirect(reverse(account_view))
+        else:
+            context = {
+                'has_error': True,
+                'user': username,
+                'error': "خطا در ورود",
+                
+            }
+            return render(request, "accounts/login.html", context)
+        
+    else:
+        if request.user.is_authenticated and request.user.is_active:
+            return HttpResponseRedirect(reverse(account_view))
+        else:
+            return render(request, "accounts/login.html", {
+               'has_error': False, 
+            })
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse(login_view))
+ 
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def manage_std_search_view(request):
+    if request.user.is_staff:
+        std_search_form = StdSearchForm()
+    
+        first_name = request.GET.get('first_name')
+        last_name = request.GET.get('last_name')
+
+        search_fields = dict()
+
+        if first_name:
+            search_fields['student__first_name'] = first_name
+            std_search_form.fields['first_name'].widget.attrs['value'] = first_name
+
+        if last_name:
+            search_fields['student__last_name'] = last_name
+            std_search_form.fields['last_name'].widget.attrs['value'] = last_name
+
+        students = StdInfoModel.objects.filter(**search_fields)
+
+        context = {
+            'Search_Form':std_search_form,
+            'students': students,
+        }
+
+        return render(request, "accounts/manage-student-search.html", context)
+    
+    else:
+        raise Http404
+
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def student_view(request):
+    if request.user.is_staff:
+        return HttpResponseRedirect(reverse(manage_std_search_view))
+    else:
+        raise Http404
+    
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def manage_student_view(request, student_id):
+    if request.user.is_staff:
+        std = get_object_or_404(StdInfoModel, pk=student_id)
+        user = get_object_or_404(UserModel, pk=std.student.pk)
+
+        context = {
+            'info': std,
+            'reports': StdReportModel.objects.filter(student=std),
+            'educational': {
+                'good': StdEducationalModel.objects.filter(student=std, bad=None),
+                'bad': StdEducationalModel.objects.filter(student=std, good=None),
+            },
+            'payments' : UserPriceModel.objects.filter(user=user)
+
+        }
+        for total_price in context['payments']:
+            if not price_peer_part(total_price):
+                total_price.finished = True
+                total_price.save
+
+        return render(request, "accounts/manage-student.html", context)
+    
+    else:
+        raise Http404
+    
+    
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def student_info_view(request, student_id):
+    if request.user.is_staff:
+        #TODO: fix bug
+        student = get_object_or_404(StdInfoModel, pk=student_id)
+        father = get_object_or_404(FatherInfoModel, child=student)
+        mather = get_object_or_404(MatherInfoModel, child=student)
+        supervisor = get_object_or_404(SupervisorInfoModel, child=student)
+        lastschool = get_object_or_404(StdLastSchoolModel, student=student)
+        competitions = get_object_or_404(StdCompetitionsModel, student=student)
+        shad = get_object_or_404(StdShadModel, student=student)
+        place = get_object_or_404(StdPlaceInfoModel, student=student)
+        
+        # StdInfo_Form = StdInfoForm(instance=student)
+        # User_Form = UserForm(instance=student.student)
+        # FatherInfo_Form = FatherInfoForm(instance=father)
+        # MotherInfo_Form = MotherInfoForm(instance=mather)
+        # SupervisorInfo_Form = SupervisorInfoForm(instance=supervisor)
+        # StdLastSchool_Form = StdLastSchoolForm(instance=lastschool)
+        # StdCompetitions_Form = StdCompetitionsForm(instance=competitions)
+        # StdShad_Form = StdShadForm(instance=shad)
+        # StdPlaceInfo_Form = StdPlaceInfoForm(instance=place)
+        
+        context={
+            # 'StdInfo': StdInfo_Form,
+            # 'uinfo': User_Form,
+            # 'FatherInfo': FatherInfo_Form,
+            # 'MotherInfo': MotherInfo_Form,
+            # 'SupervisorInfo': SupervisorInfo_Form,
+            # 'LastSchool': StdLastSchool_Form,
+            # 'Competitions': StdCompetitions_Form,
+            # 'Shad': StdShad_Form,
+            # 'PlaceInfo': StdPlaceInfo_Form,
+        } 
+        
+        return render(request, "accounts/manage-student-info.html", context)
+    
+    else:
+        raise Http404
+
+
+@login_required(None,REDIRECT_FIELD_NAME) 
+def report_create_view(request, student_id):
+    if request.user.is_staff:
+        has_error = False
+        student = get_object_or_404(StdInfoModel, pk=student_id)
+        StdReport_Form = StdReportForm()
+        
+        if request.method=="POST":
+            if StdReport_Form.is_valid:
+                Report = StdReportModel.objects.create(student=student)
+                StdReport_Form = StdReportForm(request.POST, instance=Report)
+                try:
+                    StdReport_Form.save()
+                except ValueError:
+                    has_error = True
+            
+            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': student_id}))    
+        
+
+        context={
+            'report': StdReport_Form,
+            'student_id': student_id,
+            'text': "افزودن",
+            'has_error': has_error
+        }    
+        return render(request, "accounts/manage-student-add-report.html", context)
+    
+    else:
+        raise Http404
+
+
+
+class ReportDelete(DeleteView):
+    model = StdReportModel
+    context_object_name = 'report'
+
+ 
+    def form_valid(self, form):
+        messages.success(self.request, "The report was deleted successfully.")
+        return super(ReportDelete, self).form_valid(form)
+
+    def get_success_url(self):
+        object = self.get_object()
+        std_id = object.student.pk
+        return reverse_lazy('manage-student', kwargs={'student_id': std_id})
+ 
+ 
+    
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def report_update_view(request, report_id):
+    if request.user.is_staff:
+        has_error = False
+        report = get_object_or_404(StdReportModel, pk=report_id)
+        StdReport_Form = StdReportForm(instance=report)
+        
+        if request.method == "POST":
+            if StdReport_Form.is_valid:
+
+                StdReport_Form = StdReportForm(request.POST, instance=report)
+                try:
+                    StdReport_Form.save()
+                except ValueError:
+                    has_error = True
+            
+            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': report.student.pk}))    
+        
+
+        context={
+            'report': StdReport_Form,
+            'student_id': report.student.pk,
+            'text': "ویرایش",
+            'has_error': has_error
+        }    
+        return render(request, "accounts/manage-student-add-report.html", context)
+    
+    else:
+        raise Http404
+
+
+
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def Educational_good_create_view(request, student_id):
+    if request.user.is_staff:
+        has_error = False
+        student = get_object_or_404(StdInfoModel, pk=student_id)
+        StdEducational_Form = StdEducationalGoodForm()
+        
+        if request.method == "POST":
+           
+            if StdEducational_Form.is_valid:
+                
+                educational = StdEducationalModel.objects.create(student=student)
+                StdEducational_Form = StdEducationalGoodForm(request.POST, instance=educational)
+                try:
+                    StdEducational_Form.save()
+                except ValueError:
+                    has_error= True
+            
+            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': student_id}))    
+        
+
+        context={
+            'educational': StdEducational_Form,
+            'student_id': student_id,
+            'type': "افزودن",
+            'text': "مثبت",
+            'has_error': has_error
+        }    
+        return render(request, "accounts/manage-student-educational.html", context)
+    
+    else:
+        raise Http404
+    
+    
+
+class EducationalDelete(DeleteView):
+    model = StdEducationalModel
+    context_object_name = 'educational'
+
+ 
+    def form_valid(self, form):
+        messages.success(self.request, "The report was deleted successfully.")
+        return super(EducationalDelete, self).form_valid(form)
+
+    def get_success_url(self):
+        object = self.get_object()
+        std_id = object.student.pk
+        return reverse_lazy('manage-student', kwargs={'student_id': std_id})
+ 
+ 
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def Educational_good_update_view(request, edu_id):
+    if request.user.is_staff:
+        has_error = False
+        edu = get_object_or_404(StdEducationalModel, pk=edu_id)
+        
+        StdEducational_Form = StdEducationalGoodForm(instance=edu)
+        
+        if request.method == "POST":
+            if StdEducational_Form.is_valid:
+
+                StdEducational_Form = StdEducationalGoodForm(request.POST, instance=edu)
+                try:
+                    StdEducational_Form.save()
+                except ValueError:
+                    has_error = True
+            
+            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': edu.student.pk}))    
+        
+
+        context={
+            'educational': StdEducational_Form,
+            'student_id': edu.student.pk,
+            'type': "ویرایش",
+            'text': "مثبت",
+            'has_error': has_error
+        }    
+        return render(request, "accounts/manage-student-educational.html", context)
+    
+    else:
+        raise Http404
+
+
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def Educational_bad_create_view(request, student_id):
+    if request.user.is_staff:
+        has_error = False
+        student = get_object_or_404(StdInfoModel, pk=student_id)
+        StdEducational_Form = StdEducationalbadForm()
+        
+        if request.method=="POST":
+            if StdEducational_Form.is_valid:
+                educational = StdEducationalModel.objects.create(student=student)
+                StdEducational_Form = StdEducationalbadForm(request.POST, instance=educational)
+                try:
+                    StdEducational_Form.save()
+                except ValueError:
+                    has_error = True
+            
+            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': student_id}))    
+        
+
+        context={
+            'educational': StdEducational_Form,
+            'student_id': student_id,
+            'type': "افزودن",
+            'text': "منفی",
+            'has_error': has_error
+        }    
+        return render(request, "accounts/manage-student-educational.html", context)
+    
+    else:
+        raise Http404
+    
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def Educational_bad_update_view(request, edu_id):
+    if request.user.is_staff:
+        has_error= False
+        edu = get_object_or_404(StdEducationalModel, pk=edu_id)
+        StdEducational_Form = StdEducationalGoodForm(instance=edu)
+        
+        if request.method == "POST":
+            if StdEducational_Form.is_valid:
+                StdEducational_Form = StdEducationalGoodForm(request.POST, instance=edu)
+                try:
+                    StdEducational_Form.save()
+                except ValueError:
+                    has_error = True
+            
+            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': edu.student.pk}))    
+        
+
+        context={
+            'educational': StdEducational_Form,
+            'student_id': edu.student.pk,
+            'type': "ویرایش",
+            'text': "مثبت",
+            'has_error': has_error
+        }    
+        return render(request, "accounts/manage-student-educational.html", context)
+    
+    else:
+        raise Http404
+
+
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def group_view(request):
+    if request.user.is_staff:
+        group = StdGroupModel.objects.all()
+
+        context={
+            'groups': group
+        }
+        return render(request, "accounts/manage-student-group.html", context)
+    
+    else:
+        raise Http404
+
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def group_upload_view(request, group_id):
+    if request.user.is_staff:
+        get_group = get_object_or_404(StdGroupModel, pk=group_id)
+        form  = StdGroupForm(instance=get_group)
+        
+        if request.method == 'POST':  
+            fileform = StdUploadGroupForm(request.POST, request.FILES)  
+            if fileform.is_valid():  
+                import_csv_file(request.FILES['file'], get_group, UserModel)  
+                
+                return render(request, "accounts/page-upload-successful.html")
+        else:  
+            fileform = StdUploadGroupForm()  
+            
+            context={
+                'group': form,
+                'formfile': fileform,
+                
+            }
+            return render(request, "accounts/manage-student-group-upload.html", context)
+    
+    else:
+        raise Http404
+
+
+
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+def reset_password_view(request):
+    context={}
+    if request.method == "POST":
+        rp_form = ResetPassWord(request.POST)
+        user = request.user
+        if rp_form.is_valid():
+            last_password =  rp_form.cleaned_data['last_password']
+            new_password =   rp_form.cleaned_data['new_password']
+            Confirm_password =   rp_form.cleaned_data['Confirm_password']
+        
+            authenticate_user = authenticate(request, username=user.username, password=last_password)
+        
+            if (authenticate_user is not None) and \
+                (new_password == Confirm_password) and \
+                (new_password != last_password):
+                    
+                try:
+                    user.set_password(new_password)
+                    user.save()
+                    context['notice'] = "رمز عبور با موفقیت تغییر کرد"
+                except:
+                    context['erro_text'] = "یک اشتباهی رخ داده است"
+                    
+               
+                
+            else:
+                context['erro_text'] = "اطلاعات وارد شده غلط میباشد"
+            
+        else:
+            context['erro_text'] = "یک اشتباهی رخ داده است"
+            
+        
+    
+    else:
+        rp_form = ResetPassWord()
+        
+        
+    context['form'] = rp_form
+    return render(request,'accounts/profile-reset-password.html', context)
+
+
+def error_404_view(request, exception):
+    return render(request, 'accounts/page-404.html')
+
+
+def error_403_view(request, exception):
+    return render(request, 'accounts/page-403.html')

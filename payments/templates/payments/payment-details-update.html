@@ -1,0 +1,76 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% block titlepage %} {{text}} پرداخت {% endblock %}
+{% block addstyle %}
+    <link href="{% static 'accounts/vendors/flatpickr/flatpickr.min.css'%}" rel="stylesheet">
+
+{% endblock %}
+{% block basecontent %}
+         
+
+                  <div class="card mb-3">
+                     <div class="card-body d-flex flex-wrap flex-between-center">
+                        <div>
+                           <h6 class="text-primary">{{text}} پرداخت </h6>
+                           <h5 class="mb-0">{{ payment.total.user.first_name }} {{ payment.total.user.last_name }}</h5>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="card mb-3">
+                     <div class="card-body position-relative">
+                        <form action="" method="POST" >
+                           <div class="row g-3">
+                              {%csrf_token %}
+	 	
+                              <div class="row g-3">
+
+
+                                 <div class="col-md-12">
+                                    <label class="form-label" >{{payment_form.description.label}}</label>
+                                    {{payment_form.description}}
+                                 </div>
+                                 <div class="col-md-6">
+                                  <label class="form-label" >{{payment_form.price.label}}</label>
+                                  {{payment_form.price}}
+                               </div>
+                               <div class="col-md-6">
+                                  <label class="form-label" >{{payment_form.date.label}}</label>
+                                  {{payment_form.date}}
+                               </div>
+
+
+                               <div class="col-md-12">
+                                 <button class="btn btn-success me-1 mb-1" type="submit">تایید</button>
+                                 <a class="btn btn-falcon-primary me-1 mb-1"href="{% url 'payment-details' back %}">بازگشت</a>
+                                 {% if can_delete %}
+                                     <a class="btn btn-danger me-1 mb-1"href="{% url 'payment-details-delete' payment.pk %}">پاک کردن</a>
+                                 {% endif %}
+                              </div>
+
+                              </div>
+                        </form>
+                     </div>
+                  </div>
+
+      
+{% endblock %}
+
+{% block addscript %}
+    <script src="{% static 'accounts/assets/js/jquery-3.6.4.min.js'%}"></script>
+    <script src="{% static 'accounts/assets/js/flatpickr.full.js'%}"></script>
+    
+    <script src="{% static 'accounts/assets/js/flatpickr.local-fa.js'%}"></script>
+    <script src="{% static 'accounts/assets/js/flatpickr.fa.js'%}"></script>
+    <script>
+      $(".datetimepicker").flatpickr(
+         {
+           
+            "locale": "fa",
+        }
+      );
+
+    </script>
+    
+{% endblock %}

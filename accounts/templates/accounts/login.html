@@ -1,0 +1,53 @@
+{% extends "accounts/base.html" %}
+{% block titlepage %} صفحه ورود{% endblock %}
+{% block basetheme %}
+<!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+        <div class="container" data-layout="container">
+          <div class="row flex-center min-vh-100 py-6">
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4" href="#"><span class="font-sans-serif fw-bolder fs-5 d-inline-block">سامانه جامع شاهد</span></a>
+              <div class="card">
+                <div class="card-body p-4 p-sm-5">
+                  <div class="row flex-between-center mb-2">
+                    <div class="col-auto">
+                      <h5>ورود</h5>
+                    </div>
+                    
+                  </div>
+                  <form action="" method="POST" >
+                    {% csrf_token %}
+                    
+                    {% if has_error %}
+                    <div class="alert alert-danger" role="alert">{{error}}</div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                      <input class="form-control" name="username" type="text" placeholder="نام کاربری" />
+                    </div>
+                    <div class="mb-3">
+                      <input class="form-control" name="password" type="password" placeholder="پسورد" />
+                    </div>
+                    <div class="row flex-between-center">
+                      <div class="col-auto">
+                        <div class="form-check mb-0">
+                          <input class="form-check-input" type="checkbox" id="basic-checkbox" checked="checked" />
+                          <label class="form-check-label mb-0" for="basic-checkbox">مرا به خاطر بسپار</label>
+                        </div>
+                      </div>
+                      <div class="col-auto"><a class="fs--1" href="../../../pages/authentication/simple/forgot-password.html">رمز عبور را فراموش کرده اید؟</a></div>
+                    </div>
+                    <div class="mb-3">
+                      <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">ورود</button>
+                    </div>
+                  </form>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+{% endblock %}

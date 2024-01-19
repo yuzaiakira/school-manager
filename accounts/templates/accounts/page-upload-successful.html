@@ -1,0 +1,32 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block basetheme %}
+
+<main class="main" id="top">
+    <div class="container" data-layout="container">
+      <script>
+        var isFluid = JSON.parse(localStorage.getItem('isFluid'));
+        if (isFluid) {
+          var container = document.querySelector('[data-layout]');
+          container.classList.remove('container');
+          container.classList.add('container-fluid');
+        }
+      </script>
+      <div class="row flex-center min-vh-100 py-6 text-center">
+        <div class="col-sm-10 col-md-8 col-lg-6 col-xxl-5">
+          <div class="card">
+            <div class="card-body p-4 p-sm-5">
+              <div class="fw-black lh-1 text-300 fs-error">هورا</div>
+              <p class="lead mt-4 text-800 font-sans-serif fw-semi-bold w-md-75 w-xl-100 mx-auto">عملیات با موفقیت انجام شد</p>
+              <hr>
+              <p>وارد کردن اطلاعات کاربران با موفقیت انجام شد شما میتوانید به صفحه اصلی برگیردید</p>
+              <a class="btn btn-primary btn-sm mt-3" href="{% url 'account' %}"><span class="fas fa-home me-2"></span>من رو ببر خونه</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+{% endblock %}

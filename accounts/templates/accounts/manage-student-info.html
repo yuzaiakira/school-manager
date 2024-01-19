@@ -1,0 +1,588 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% block titlepage %} مشخصات دانش آموز{% endblock %}
+{% block addstyle %}
+    <link href="{% static 'accounts/vendors/flatpickr/flatpickr.min.css'%}" rel="stylesheet">
+    <style>
+      .form-control:disabled, .form-select:disabled {
+         background-color: #f9f9f9 !important;
+
+       }
+       .form-control {
+         
+         box-shadow: unset !important;
+       }
+       input:disabled{
+         color:#000;
+       }
+       
+       
+
+    </style>
+{% endblock %}
+{% block basecontent %}
+         
+
+                  <div class="card mb-3">
+                     <div class="card-body d-flex flex-wrap flex-between-center">
+                        <div>
+                           <h6 class="text-primary">مشخصات</h6>
+                           <h5 class="mb-0">دانش آموز</h5>
+                        </div>
+                     </div>
+                  </div>
+
+
+                  <div class="card mb-3">
+                     <div class="card-body position-relative">
+                    
+                     <form action="" method="POST" >
+                        <fieldset class="row g-3" disabled="disabled">
+                           {% csrf_token %}
+                           <div class="col-md-4">
+                              <label class="form-label" >{{uinfo.first_name.label}}</label>
+                              {{uinfo.first_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{uinfo.last_name.label}}</label>
+                              {{uinfo.last_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.id_code.label}}</label>
+                              {{StdInfo.id_code}}
+                           </div>
+                           
+
+                           <div class="col-md-3">
+                              <label class="form-label" >{{StdInfo.certificate_place.label}}</label>
+                              {{StdInfo.certificate_place}}
+                           </div>
+                           <div class="col-md-3">
+                              <label class="form-label" >{{StdInfo.certificate_Zone.label}}</label>
+                              {{StdInfo.certificate_Zone}}
+                           </div>
+                           <div class="col-md-2">
+                              <label class="form-label" >{{StdInfo.serial.label}}</label>
+                              {{StdInfo.serial}}
+                           </div>
+                           <div class="col-md-2">
+                              <label class="form-label" >{{StdInfo.serial_number.label}}</label>
+                              {{StdInfo.serial_number}}
+                           </div>
+                           <div class="col-md-2">
+                              <label class="form-label" >{{StdInfo.serial_char.label}}</label>
+                              {{StdInfo.serial_char}}
+                           </div>
+
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.birth_place.label}}</label>
+                              {{StdInfo.birth_place}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.birthday.label}}</label>
+                              {{StdInfo.birthday}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.physical_condition.label}}</label>
+                              {{StdInfo.physical_condition}}
+                           </div>
+                           <div class="col-md-12">
+                              <label class="form-label" >{{StdInfo.special_Des.label}}</label>
+                              {{StdInfo.special_Des}}
+                           </div>
+
+
+                           <div class="col-md-3">
+                              <label class="form-label" >{{StdInfo.family_size.label}}</label>
+                              {{StdInfo.family_size}}
+                           </div>
+                           <div class="col-md-3">
+                              <label class="form-label" >{{StdInfo.child_num.label}}</label>
+                              {{StdInfo.child_num}}
+                           </div>
+                           <div class="col-md-3">
+                              <label class="form-label" >{{StdInfo.bro_num.label}}</label>
+                              {{StdInfo.bro_num}}
+                           </div>
+                           <div class="col-md-3">
+                              <label class="form-label" >{{StdInfo.sis_num.label}}</label>
+                              {{StdInfo.sis_num}}
+                           </div>
+
+
+                           <div class="col-md-6">
+                              <label class="form-label" >{{StdInfo.place.label}}</label>
+                              {{StdInfo.place}}
+                           </div>
+                           <div class="col-md-6">
+                              <label class="form-label" >{{StdInfo.live_with.label}}</label>
+                              {{StdInfo.live_with}}
+                           </div>
+
+                           
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.insurance.label}}</label>
+                              {{StdInfo.insurance}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.veteran_percentage.label}}</label>
+                              {{StdInfo.veteran_percentage}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{StdInfo.sacrifice_code.label}}</label>
+                              {{StdInfo.sacrifice_code}}
+                           </div>
+
+
+
+
+
+
+                           
+
+                        
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">پدر دانش آموز</h5>
+                        <br>
+                        <br>
+                        
+                        
+
+                           
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.first_name.label}}</label>
+                              {{FatherInfo.first_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.last_name.label}}</label>
+                              {{FatherInfo.last_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.certificate_num.label}}</label>
+                              {{FatherInfo.certificate_num}}
+                           </div>
+                           
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.id_code.label}}</label>
+                              {{FatherInfo.id_code}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.is_dead.label}}</label>
+                              {{FatherInfo.is_dead}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.marital.label}}</label>
+                              {{FatherInfo.marital}}
+                           </div>
+
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.education.label}}</label>
+                              {{FatherInfo.education}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.work.label}}</label>
+                              {{FatherInfo.work}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{FatherInfo.work_name.label}}</label>
+                              {{FatherInfo.work_name}}
+                            </div>
+                            <div class="col-md-12">
+                              <label class="form-label" >{{FatherInfo.work_place.label}}</label>
+                              {{FatherInfo.work_place}}
+                            </div>
+
+                            <div class="col-md-12">
+                              <label class="form-label" >{{FatherInfo.cooperation.label}}</label>
+                              {% for item in FatherInfo.cooperation %}
+                                 <br>
+                                 {{item}} 
+                              {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-12">
+                              <label class="form-label" >{{FatherInfo.cooperation_des.label}}</label>
+                              {{FatherInfo.cooperation_des}}
+                            </div>
+
+
+
+
+
+                           
+                          
+
+                        
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">مادر دانش آموز</h5>
+                        <br>
+                        <br>
+                        
+                     
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.first_name.label}}</label>
+                              {{MotherInfo.first_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.last_name.label}}</label>
+                              {{MotherInfo.last_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.certificate_num.label}}</label>
+                              {{MotherInfo.certificate_num}}
+                           </div>
+                           
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.id_code.label}}</label>
+                              {{MotherInfo.id_code}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.is_dead.label}}</label>
+                              {{MotherInfo.is_dead}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.marital.label}}</label>
+                              {{MotherInfo.marital}}
+                           </div>
+
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.education.label}}</label>
+                              {{MotherInfo.education}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.work.label}}</label>
+                              {{MotherInfo.work}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{MotherInfo.work_name.label}}</label>
+                              {{MotherInfo.work_name}}
+                            </div>
+                            <div class="col-md-12">
+                              <label class="form-label" >{{MotherInfo.work_place.label}}</label>
+                              {{MotherInfo.work_place}}
+                            </div>
+
+                            <div class="col-md-12">
+                              <label class="form-label" >{{MotherInfo.cooperation.label}}</label>
+                              {% for item in MotherInfo.cooperation %}
+                                 <br>
+                                 {{item}} 
+                              {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-12">
+                              <label class="form-label" >{{MotherInfo.cooperation_des.label}}</label>
+                              {{MotherInfo.cooperation_des}}
+                            </div>
+                        
+
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">سرپرست دانش آموز</h5>
+                        <br>
+                        <br>
+                        
+                       
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.first_name.label}}</label>
+                              {{SupervisorInfo.first_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.last_name.label}}</label>
+                              {{SupervisorInfo.last_name}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.certificate_num.label}}</label>
+                              {{SupervisorInfo.certificate_num}}
+                           </div>
+                           
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.id_code.label}}</label>
+                              {{SupervisorInfo.id_code}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.relationship.label}}</label>
+                              {{SupervisorInfo.relationship}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.marital.label}}</label>
+                              {{SupervisorInfo.marital}}
+                           </div>
+
+
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.education.label}}</label>
+                              {{SupervisorInfo.education}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.work.label}}</label>
+                              {{SupervisorInfo.work}}
+                           </div>
+                           <div class="col-md-4">
+                              <label class="form-label" >{{SupervisorInfo.work_name.label}}</label>
+                              {{SupervisorInfo.work_name}}
+                            </div>
+                            <div class="col-md-12">
+                              <label class="form-label" >{{SupervisorInfo.work_place.label}}</label>
+                              {{SupervisorInfo.work_place}}
+                            </div>
+
+                            <div class="col-md-12">
+                              <label class="form-label" >{{SupervisorInfo.cooperation.label}}</label>
+                              {% for item in SupervisorInfo.cooperation %}
+                                 <br>
+                                 {{item}} 
+                              {% endfor %}
+                            </div>
+                            
+                            <div class="col-md-12">
+                              <label class="form-label" >{{SupervisorInfo.cooperation_des.label}}</label>
+                              {{SupervisorInfo.cooperation_des}}
+                            </div>
+
+
+                        
+
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">مدرسه قبلی دانش آموز</h5>
+                        <br>
+                        <br>
+                        
+
+                        <div class="col-md-6">
+                           <label class="form-label" >{{LastSchool.last_school.label}}</label>
+                           {{LastSchool.last_school}}
+                        </div>
+                        <div class="col-md-6">
+                         <label class="form-label" >{{LastSchool.last_city.label}}</label>
+                         {{LastSchool.last_city}}
+                      </div>
+                      <div class="col-md-6">
+                         <label class="form-label" >{{LastSchool.phone.label}}</label>
+                         {{LastSchool.phone}}
+                      </div>
+                      <div class="col-md-6">
+                         <label class="form-label" >{{LastSchool.score.label}}</label>
+                         {{LastSchool.score}}
+                      </div>
+                        
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">سابقه فعالیت های قرآنی، علمی، فرهنگی و هنری</h5>
+                        <br>
+                        <br>
+                        
+                        <div class="col-md-12 margin-top-35px">
+                           <label class="form-label" >{{Competitions.quranic.label}}</label>
+                           <div class="row g-3">
+                           {% for item in Competitions.quranic %}
+                           <div class="col-md-3">
+                              {{item}} 
+                           </div>
+                           {% endfor %}
+                           </div>
+                         </div>
+
+                         <div class="col-md-6">
+                             <label class="form-label" >{{Competitions.sport.label}}</label>
+                             {{Competitions.sport}}
+                          </div>
+                         <div class="col-md-6">
+                             <label class="form-label" >{{Competitions.sport_rank.label}}</label>
+                             {{Competitions.sport_rank}}
+                         </div>
+                         
+                     
+                         <div class="col-md-12 margin-top-35px">
+                           <label class="form-label" >{{Competitions.academic.label}}</label>
+                           <div class="row g-3" >
+                           {% for item in Competitions.academic %}
+                           <div class="col-md-3">
+                              {{item}} 
+                           </div>
+                           {% endfor %}
+                           </div>
+                         </div>
+
+
+                         <div class="col-md-12 margin-top-35px">
+                           <label class="form-label" >{{Competitions.cultural.label}}</label>
+                           <div class="row g-3">
+                           {% for item in Competitions.cultural %}
+                           <div class="col-md-3">
+                              {{item}} 
+                           </div>
+                           {% endfor %}
+                           </div>
+                         </div>
+
+                         <div class="col-md-12 margin-top-35px">
+                           <label class="form-label" >{{Competitions.cooperation.label}}</label>
+                           <div class="row g-3">
+                           {% for item in Competitions.cooperation %}
+                           <div class="col-md-3">
+                              {{item}} 
+                           </div>
+                           {% endfor %}
+                           </div>
+                         </div>
+
+                     
+
+                         <div class="col-md-12 margin-top-35px">
+                             <label class="form-label" >{{Competitions.more.label}}</label>
+                             {{Competitions.more}}
+                          </div>
+                         
+
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">استفاده از شاد</h5>
+                        <br>
+                        <br>
+                        
+                        <div class="col-md-6">
+                           <label class="form-label" >{{Shad.smartphone.label}}</label>
+                           {{Shad.smartphone}}
+                        </div>
+                       <div class="col-md-6">
+                           <label class="form-label" >{{Shad.shad_phone.label}}</label>
+                           {{Shad.shad_phone}}
+                       </div>
+
+
+
+                        <br>
+                        <br>
+                        <hr>
+                        <br>
+
+                        <h5 class="mb-0">اطلاعات ارتباطی دانش آموز</h5>
+                        <br>
+                        <br>
+                        
+
+                        <div class="col-md-3">
+                           <label class="form-label" >{{PlaceInfo.main_St.label}}</label>
+                           {{PlaceInfo.main_St}}
+                        </div>
+                       <div class="col-md-3">
+                           <label class="form-label" >{{PlaceInfo.auxiliary_St.label}}</label>
+                           {{PlaceInfo.auxiliary_St}}
+                       </div>
+                       <div class="col-md-3">
+                           <label class="form-label" >{{PlaceInfo.main_street.label}}</label>
+                           {{PlaceInfo.main_street}}
+                       </div>
+                       <div class="col-md-3">
+                           <label class="form-label" >{{PlaceInfo.side_alley.label}}</label>
+                           {{PlaceInfo.side_alley}}
+                       </div>
+
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.plaque.label}}</label>
+                           {{PlaceInfo.plaque}}
+                       </div>
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.floor.label}}</label>
+                           {{PlaceInfo.floor}}
+                       </div>
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.postal_code.label}}</label>
+                           {{PlaceInfo.postal_code}}
+                       </div>
+                       
+
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.home_phone.label}}</label>
+                           {{PlaceInfo.home_phone}}
+                       </div>
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.dad_phone.label}}</label>
+                           {{PlaceInfo.dad_phone}}
+                       </div>
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.mom_phone.label}}</label>
+                           {{PlaceInfo.mom_phone}}
+                       </div>
+                   
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.std_phone.label}}</label>
+                           {{PlaceInfo.std_phone}}
+                       </div>
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.dad_workplace_phone.label}}</label>
+                           {{PlaceInfo.dad_workplace_phone}}
+                       </div>
+                       <div class="col-md-4">
+                           <label class="form-label" >{{PlaceInfo.mom_workplace_phone.label}}</label>
+                           {{PlaceInfo.mom_workplace_phone}}
+                       </div>
+
+                       
+                       <div class="col-md-6">
+                           <label class="form-label" >{{PlaceInfo.supervisor_phone.label}}</label>
+                           {{PlaceInfo.supervisor_phone}}
+                       </div>
+                       
+                       
+                       <div class="col-md-6">
+                           <label class="form-label" >{{PlaceInfo.sms_phone.label}}</label>
+                           {{PlaceInfo.sms_phone}}
+                       </div>
+
+
+                     </fieldset>
+
+                      </form>
+                     </div>
+                  </div>
+
+      
+{% endblock %}
+
+{% block addscript %}
+    <script src="{% static 'accounts/assets/js/jquery-3.6.4.min.js'%}"></script>
+    <script src="{% static 'accounts/assets/js/flatpickr.full.js'%}"></script>
+    
+    <script src="{% static 'accounts/assets/js/flatpickr.local-fa.js'%}"></script>
+    <script src="{% static 'accounts/assets/js/flatpickr.fa.js'%}"></script>
+    <script>
+      $(".datetimepicker").flatpickr(
+         {
+           
+            "locale": "fa",
+        }
+      );
+
+    </script>
+    
+{% endblock %}

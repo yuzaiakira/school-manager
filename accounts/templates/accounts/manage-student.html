@@ -1,0 +1,385 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% load accounts_tags %}
+
+{% block titlepage %}{{info.student.first_name|default_if_none:""}} {{ info.student.last_name|default_if_none:"" }}{% endblock %}
+
+{% block basecontent %}
+
+
+
+            <div class="card mb-3">
+                <div class="card-header position-relative min-vh-25 mb-7">
+                    <div class="bg-holder rounded-3 rounded-bottom-0" style="background-image:url({% static 'accounts/assets/img/generic/4.jpg'%});"></div>
+                    <!--/.bg-holder-->
+                    <div class="avatar avatar-5xl avatar-profile"><img class="rounded-circle img-thumbnail shadow-sm" src="{% static 'accounts/assets/img/user.png'%}" width="200" alt=""></div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <h4 class="mb-1">{{info.student.first_name|default_if_none:""}} {{ info.student.last_name|default_if_none:"" }}</h4>
+                            <p class="text-500">{{info.student.group.group}}</p>
+                            <div class="border-dashed-bottom my-4 d-lg-none"></div>
+                        </div>
+
+                        <div class="col ps-2 ps-lg-3">
+                            <a class="btn btn-falcon-primary d-block" href="{% url 'student-info' info.pk %}">مشاهده مشخصات</a>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h5 class="mb-0">مشخصات دانش اموز</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body bg-light border-top">
+                    <div class="row">
+                        <div class="col-lg col-xxl-5">
+                            <h6 class="fw-semi-bold ls mb-3 text-uppercase">مشخصات دانش آموز</h6>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">نام</p>
+                                </div>
+                                <div class="col">{{info.student.first_name|default_if_none:"ثبت نشده"}}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">نام خانوادگی</p>
+                                </div>
+                                <div class="col">{{ info.student.last_name|default_if_none:"ثبت نشده" }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">نام پدر</p>
+                                </div>
+                                <div class="col">{{ info.FatherInfoModel.first_name|default_if_none:"ثبت نشده" }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">کد ملی</p>
+                                </div>
+                                <div class="col">{{ info.id_code|default_if_none:"ثبت نشده" }}</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">تاریخ تولد</p>
+                                </div>
+                                <div class="col">{{ info.birthday|default_if_none:"ثبت نشده" }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg col-xxl-5 mt-4 mt-lg-0 offset-xxl-1">
+                            <h6 class="fw-semi-bold ls mb-3 text-uppercase">شماره تماس ها</h6>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">شماره همراه پدر</p>
+                                </div>
+                                <div class="col"><a href="tel:{{ info.StdPlaceInfoModel.dad_phone|default_if_none:'' }}">{{ info.StdPlaceInfoModel.dad_phone|default_if_none:"ثبت نشده" }}</a></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">شماره همراه مادر</p>
+                                </div>
+                                <div class="col"><a href="tel:{{ info.StdPlaceInfoModel.mom_phone|default_if_none:'' }}">{{ info.StdPlaceInfoModel.mom_phone|default_if_none:"ثبت نشده" }}</a></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-1">شماره تلفن منزل</p>
+                                </div>
+                                <div class="col"><a href="tel:{{ info.StdPlaceInfoModel.home_phone|default_if_none:'' }}">{{ info.StdPlaceInfoModel.home_phone|default_if_none:"ثبت نشده" }}</a></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5 col-sm-4">
+                                    <p class="fw-semi-bold mb-0">شماره شاد</p>
+                                </div>
+                                <div class="col">
+                                    <a href="tel:{{ info.StdShadModel.shad_phone|default_if_none:'' }}">{{ info.StdShadModel.shad_phone|default_if_none:"ثبت نشده" }}</a>
+                                </div>
+                            </div>
+               
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer border-top text-end">
+                    <a class="btn btn-falcon-default btn-sm ms-2" href="{% url 'student-info' info.pk %}">
+                        <span class="fas fa-check fs--2 me-1"></span>
+                        مشاهده بیشتر 
+                    </a>
+                </div>
+            </div>
+
+
+
+            
+
+            <div class="card mb-3">
+                <div class="card-header bg-light d-flex justify-content-between">
+                    <h5 class="mb-0">فعالیت ها</h5><a class="font-sans-serif" href="{% url 'report-create' info.pk%}">افزودن فعالیت</a>
+                </div>
+                <div class="card-body fs--1 p-0">
+                    {% if not reports %}
+                       
+                        <div class="alert alert-info border-2 d-flex align-items-center" role="alert" style="margin: 15px 10px;">
+                            <div class="bg-info me-3 icon-item"><span class="fas fa-info-circle text-white fs-3"></span></div>
+                            <p class="mb-0 flex-1">هیچ موردی ثبت نشده است</p>
+                        </div>
+                       
+                    
+                    {% else %}
+
+                        {% for report in reports %}
+                        
+                            <div class="border-bottom-0 notification rounded-0 border-x-0 border border-300 position-relative">
+                                <div class="notification-avatar">
+                                    <div class="avatar avatar-xl me-3">
+                                   
+                                    
+                                    </div>
+                                </div>
+                                <div class="notification-body">
+                                    
+                                    <p class="mb-1">
+                                        <strong>{% if report.title == '' or  report.title == None  %}وارد نشده{% else %}{{report.title}}{% endif %}</strong>
+                                        {% if report.score == '' or  report.score == None  %}{% else %}<small> ({{report.score}}) </small> {% endif %} </p>
+                                    {% if report.desc == '' or  report.desc == None  %}{% else %}<p class="mb-1" style="color:#939393;">{{report.desc}}</p>{% endif %}
+                                    {% if report.date == '' or  report.date == None  %}{% else %}<span class="notification-time">{{report.date}}</span>{% endif %}
+        
+  
+                                    <div class="dropdown font-sans-serif d-inline-block mb-2 position-absolute" style="left:20px; top:30%;">
+                                        <button class="btn btn-falcon-default" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="svg-inline--fa fa-ellipsis-h fa-w-16 fs--1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg></button>
+                                        <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="dropdownMenuButton">
+                                          <a class="dropdown-item" href="{%url 'report-delete' report.id %}">پاک کردن</a>
+                                          <a class="dropdown-item" href="{%url 'report-update' report.id %}">ویرایش کردن</a>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+        
+                    
+                   
+
+                    
+                </div>
+            </div>
+
+
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">پرونده تربیتی دانش آموز</h5>
+                </div>
+                <div class="card-body bg-light">
+                    
+                    <h6 class="fs-0">موارد مثبت</h6>
+                    
+                    <table class="table table-bordered mt-3 bg-white dark__bg-1100">
+                        <thead>
+                        <tr class="fs--1">
+                            <th>کارها و فعالیت ها</th>
+                            <th>تعداد</th>
+                            <th>نمره متعلقه</th>
+                            <th>عملیات</th>
+                            
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for good in educational.good %}
+                                <tr>
+                                    <td>
+                                        <p>{{good.good|default_if_none:''}}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{good.number|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{good.score|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+
+                                    <td class="text-center align-middle">
+                                    
+                                        <div class="dropdown font-sans-serif d-inline-block mb-2">
+                                            <button class="btn btn-falcon-default" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="svg-inline--fa fa-ellipsis-h fa-w-16 fs--1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="{%url 'edu-delete' good.pk %}">پاک کردن</a>
+                                            <a class="dropdown-item" href="{%url 'edu-good-update' good.pk %}">ویرایش کردن</a>
+                                            </div>
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{%url 'edu-good-create' info.pk %}"> 
+                                    افزودن مورد جدید
+                                    </a>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <br>
+                    <hr>
+                    <br>
+                    <h6 class="fs-0">موارد منفی</h6>
+                    
+                    <table class="table table-bordered mt-3 bg-white dark__bg-1100">
+                        <thead>
+                        <tr class="fs--1">
+                            <th>کارها و فعالیت ها</th>
+                            <th>تعداد</th>
+                            <th>نمره متعلقه</th>
+                            <th>عملیات</th>
+                            
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                            {% for bad in educational.bad %}
+                                <tr>
+                                    <td>
+                                        <p>{{bad.bad|default_if_none:''}}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{bad.number|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+                                    <td>
+                                        <p>{{bad.score|default_if_none:'ثبت نشده'}}</p>
+                                    </td>
+
+                                    <td class="text-center align-middle">
+                                    
+                                        <div class="dropdown font-sans-serif d-inline-block mb-2">
+                                            <button class="btn btn-falcon-default" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg class="svg-inline--fa fa-ellipsis-h fa-w-16 fs--1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg></button>
+                                            <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="{%url 'edu-delete' bad.pk %}">پاک کردن</a>
+                                            <a class="dropdown-item" href="{%url 'edu-bad-update' bad.pk %}">ویرایش کردن</a>
+                                            </div>
+                                        </div>
+                                        
+                                    </td>
+                                    
+                                </tr>
+
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{%url 'edu-bad-create' info.pk %}"> 
+                                    افزودن مورد جدید
+                                    </a>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+
+                </div>
+            </div>
+
+
+
+
+
+
+
+            <div class="card mb-3">
+                <div class="card-header bg-light d-flex justify-content-between">
+                    <h5 class="mb-0">شهریه ها</h5><a class="font-sans-serif" href="{% url 'user-price-add' info.student.pk %}">افزودن شهریه</a>
+                </div>
+                <div class="card-body fs--1 p-0">
+                    {% if not payments %}
+
+                        <div class="alert alert-info border-2 d-flex align-items-center" role="alert" style="margin: 15px 10px;">
+                            <div class="bg-info me-3 icon-item"><span class="fas fa-info-circle text-white fs-3"></span></div>
+                            <p class="mb-0 flex-1">هیچ موردی ثبت نشده است</p>
+                        </div>
+
+
+                    {% else %}
+
+                    <div class="card-body p-0">
+                      <div class="table-responsive scrollbar">
+                        <table class="table mb-0 fs--1 border-200 table-borderless">
+                          <thead class="bg-light">
+                            <tr class="text-800 bg-200">
+                              <th class="text-nowrap">سال</th>
+                              <th class="text-center text-nowrap">نوع</th>
+                              <th class="text-center text-nowrap">مبلغ</th>
+                              <th class="text-center text-nowrap">قسطی؟</th>
+                              <th class="text-center text-nowrap">تمام شده</th>
+                              <th class="text-center text-nowrap">عملیات</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                               {% for payment in payments %}
+                                    <tr class="border-bottom border-200">
+                                      <td class="align-middle font-sans-serif fw-medium text-nowrap"><a href="{%url 'payment-details' payment.id %}">{{ payment.total_price.year }}</a></td>
+                                      <td class="align-middle text-center">{{ payment.total_price.name }}</td>
+                                      <td class="align-middle text-center">{{ payment.total_price.price }}</td>
+                                      <td class="align-middle text-center">{{ payment.Installment|show_boolean_value }}</td>
+                                      <td class="align-middle text-center">{{ payment.finished|show_boolean_value }}</td>
+                                      <td class="align-middle text-center">
+                                        <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false"><svg class="svg-inline--fa fa-ellipsis-h fa-w-16 fs--1" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="ellipsis-h" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M328 256c0 39.8-32.2 72-72 72s-72-32.2-72-72 32.2-72 72-72 72 32.2 72 72zm104-72c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72zm-352 0c-39.8 0-72 32.2-72 72s32.2 72 72 72 72-32.2 72-72-32.2-72-72-72z"></path></svg><!-- <span class="fas fa-ellipsis-h fs--1"></span> Font Awesome fontawesome.com --></button>
+                                          <div class="dropdown-menu dropdown-menu-end border py-0">
+                                            <div class="bg-white py-2"><a class="dropdown-item" href="{% url 'user-price-update' payment.id %}">ویرایش</a></div>
+                                            <div class="bg-white py-2"><a class="dropdown-item" href="{% url 'user-price-delete' payment.id %}">پاک کردن</a></div>
+                                          </div>
+                                        </div>
+                                      </td>
+                                    </tr>
+
+                               {% endfor %}
+                          </tbody>
+                          <tfoot class="bg-light">
+                            <tr class="text-700 fw-bold">
+                              <td colspan="5" >هزینه کل</td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                      </div>
+                    </div>
+
+
+
+
+
+
+
+                    {% endif %}
+
+
+
+
+
+
+                </div>
+            </div>
+
+
+
+
+
+
+{% endblock %}
+

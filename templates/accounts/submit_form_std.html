@@ -1,0 +1,8 @@
+{% extends "base/base_submit_form.html" %}
+{% block form_data %}
+
+    {% csrf_token %}
+    {{ user_form.as_div }}
+    {{ student_form.as_div }}
+
+{% endblock %}

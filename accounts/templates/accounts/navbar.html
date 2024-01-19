@@ -1,0 +1,168 @@
+{% load static %}
+<nav class="navbar navbar-light navbar-vertical navbar-expand-xl" style="display: none;">
+    <script>
+        var navbarStyle = localStorage.getItem("navbarStyle");
+        if (navbarStyle && navbarStyle !== "transparent") {
+            document.querySelector(".navbar-vertical").classList.add(`navbar-${navbarStyle}`);
+        }
+    </script>
+    <div class="d-flex align-items-center">
+        <div class="toggle-icon-wrapper">
+            <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-bs-toggle="tooltip" data-bs-placement="left" title="ناوبری را تغییر دهید">
+                <span class="navbar-toggle-icon"><span class="toggle-line"></span></span>
+            </button>
+        </div>
+        <a class="navbar-brand" href="#">
+            <div class="d-flex align-items-center py-3"><span class="font-sans-serif">مدرسه شاهد</span></div>
+        </a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
+        <div class="navbar-vertical-content scrollbar">
+            <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
+
+                <a class="nav-link" href="{% url 'account' %}" >
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><svg class="svg-inline--fa fa-graduation-cap fa-w-20" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="graduation-cap" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" data-fa-i2svg=""><path fill="currentColor" d="M622.34 153.2L343.4 67.5c-15.2-4.67-31.6-4.67-46.79 0L17.66 153.2c-23.54 7.23-23.54 38.36 0 45.59l48.63 14.94c-10.67 13.19-17.23 29.28-17.88 46.9C38.78 266.15 32 276.11 32 288c0 10.78 5.68 19.85 13.86 25.65L20.33 428.53C18.11 438.52 25.71 448 35.94 448h56.11c10.24 0 17.84-9.48 15.62-19.47L82.14 313.65C90.32 307.85 96 298.78 96 288c0-11.57-6.47-21.25-15.66-26.87.76-15.02 8.44-28.3 20.69-36.72L296.6 284.5c9.06 2.78 26.44 6.25 46.79 0l278.95-85.7c23.55-7.24 23.55-38.36 0-45.6zM352.79 315.09c-28.53 8.76-52.84 3.92-65.59 0l-145.02-44.55L128 384c0 35.35 85.96 64 192 64s192-28.65 192-64l-14.18-113.47-145.03 44.56z"></path></svg></span><span class="nav-link-text ps-1">خانه</span></div>
+                </a>
+                
+                <a class="nav-link" href="{% url 'blog' %}">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><svg class="svg-inline--fa fa-thumbtack fa-w-12" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="thumbtack" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor" d="M298.028 214.267L285.793 96H328c13.255 0 24-10.745 24-24V24c0-13.255-10.745-24-24-24H56C42.745 0 32 10.745 32 24v48c0 13.255 10.745 24 24 24h42.207L85.972 214.267C37.465 236.82 0 277.261 0 328c0 13.255 10.745 24 24 24h136v104.007c0 1.242.289 2.467.845 3.578l24 48c2.941 5.882 11.364 5.893 14.311 0l24-48a8.008 8.008 0 0 0 .845-3.578V352h136c13.255 0 24-10.745 24-24-.001-51.183-37.983-91.42-85.973-113.733z"></path></svg></span><span class="nav-link-text ps-1">نشریه مدرسه</span></div>
+                  </a>
+
+                {% if  request.user.is_staff %}
+                    <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                        <div class="col-auto navbar-vertical-label">مدیریت</div>
+                        <div class="col ps-0">
+                            <hr class="mb-0 navbar-vertical-divider">
+                        </div>
+                    </div>
+
+                    <a class="nav-link dropdown-indicator collapsed" href="#manage" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="manage">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><svg class="svg-inline--fa fa-user fa-w-14" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg></span><span class="nav-link-text ps-1">دانش آموزان</span></div>
+                    </a>
+
+                    <ul class="nav false collapse show" id="manage" >
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'search' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">جست و جو</span></div>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'group' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">گروه ها</span></div>
+                            </a>
+                        </li>
+                    </ul>
+
+
+                {% else %}
+                    <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                        <div class="col-auto navbar-vertical-label">عملیات ثبت نام</div>
+                        <div class="col ps-0">
+                            <hr class="mb-0 navbar-vertical-divider">
+                        </div>
+                    </div>
+
+                    <a class="nav-link dropdown-indicator collapsed" href="#register" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="register">
+                        <div class="d-flex align-items-center"><span class="nav-link-icon"><svg class="svg-inline--fa fa-user fa-w-14" aria-hidden="true" focusable="true" data-prefix="fas" data-icon="user" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg></span><span class="nav-link-text ps-1">مشخصات</span></div>
+                    </a>
+
+                    <ul class="nav false collapsed show" id="register" >
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">مشخصات دانش آموز</span></div>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'father' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">مشخصات پدر دانش آموز</span></div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'mother' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">مشخصات مادر دانش آموز</span></div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'supervisor' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">مشخصات سرپرست دانش آموز</span></div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'lastschool' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">اطلاعات تحصیلی دانش آموز</span></div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'competitions' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">سابقه فعالیت های مسابقات</span></div>
+                            </a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'shad' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">مشخصات شاد</span></div>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'address' %}" aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">اطلاعات ارتباطی با دانش آموز</span></div>
+                            </a>
+                        </li>
+                    </ul>
+                <a class="nav-link" href="{% url 'user-payment-details' %}">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-credit-card"></span></span><span class="nav-link-text ps-1">پرداخت شهریه</span></div>
+                </a>
+                {% endif %}
+                <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                    <div class="col-auto navbar-vertical-label">حساب</div>
+                    <div class="col ps-0">
+                        <hr class="mb-0 navbar-vertical-divider">
+                    </div>
+                </div>     
+                <a class="nav-link" href="{% url 'reset-password' %}">
+                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-lock"></span></span><span class="nav-link-text ps-1">تغییر رمز عبور</span></div>
+                </a>
+                
+            </ul>
+           
+        </div>
+    </div>
+</nav>
+<!-- [--TOP-MENU--] -->
+<nav class="navbar navbar-light navbar-glass navbar-top navbar-expand-xl --TOP-MENU" style="display: none;">
+
+    
+    <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+        <li class="nav-item">
+            <div class="theme-control-toggle fa-icon-wait px-2">
+                <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle" type="checkbox" data-theme-control="theme" value="dark" />
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="به طرح زمینه روشن بروید">
+                    <span class="fas fa-sun fs-0"></span>
+                </label>
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left" title="به طرح زمینه تیره بروید">
+                    <span class="fas fa-moon fs-0"></span>
+                </label>
+            </div>
+        </li>
+        <li class="nav-item d-none d-sm-block">
+            <a class="nav-link px-0 notification-indicator notification-indicator-warning notification-indicator-fill fa-icon-wait" href="#">
+                <span class="fas fa-shopping-cart" data-fa-transform="shrink-7" style="font-size: 33px;"></span><span class="notification-indicator-number">1</span>
+            </a>
+        </li>
+
+     
+        <li class="nav-item dropdown">
+            <a class="nav-link pe-0" id="navbarDropdownUser" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="avatar avatar-xl">
+                    <img class="rounded-circle" src="{% static 'accounts/assets/img/team/3-thumb.png'%}" alt="" />
+                </div>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
+                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+              
+                    <a class="dropdown-item" href="#">خروج</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,114 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% load accounts_tags %}
+{% load jformat %}
+{% block titlepage %}پرداختی ها{% endblock %}
+{% block basecontent %}
+
+          <div class="card mb-3">
+             <div class="card-body d-flex flex-wrap flex-between-center">
+                <div>
+                   <h6 class="text-primary">پرداختی های - {{ total.total_price.year }}</h6>
+                   <h5 class="mb-0">{{ user.first_name }} {{ user.last_name }}</h5>
+                </div>
+             </div>
+          </div>
+          <div class="card mb-3">
+            <div class="card-body">
+
+              <div class="table-responsive scrollbar mt-4 fs--1">
+                <table class="table table-striped border-bottom">
+                  <thead class="light">
+                    <tr class="bg-primary text-white dark__bg-1000">
+                      <th class="border-0">شرح</th>
+                      <th class="border-0 text-center">مبلغ</th>
+                      <th class="border-0 text-end">تاریخ</th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if History %}
+                    {% for his in History %}
+
+                        <tr>
+                          <td class="align-middle">
+                            <h6 class="mb-0 text-nowrap">{{ his.description|default:"بدون عنوان" }}</h6>
+                          </td>
+                          <td class="align-middle text-center add-comma">{{ his.price }}</td>
+                          <td class="align-middle text-end" dir="ltr">{{ his.date|jformat:"%Y/%m/%d - %H:%M"  }}</td>
+                        </tr>
+
+                    {% endfor %}
+
+                  {% else %}
+                        <tr class="align-middle text-center">
+                          <td colspan="3" class="align-middle font-sans-serif fw-medium text-nowrap">شما تا کنون هیچ پرداختی انجام ندادید</td>
+                        </tr>
+                  {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="row justify-content-end">
+                  <div class="col-6">
+                    <br>
+                    <a class="btn btn-falcon-primary me-2 mb-1" href="{% url 'user-payment-details' %}">بازگشت</a>
+                  {% if can_payemet %}
+                    <a class="btn btn-success me-1 mb-1" href="{% url 'go-to-gateway' total.pk %}">پرداخت شهریه</a>
+                  {% endif %}
+                  </div>
+
+                <div class="col-6">
+                  <table class="table table-sm table-borderless fs--1 text-end">
+                    <tbody>
+                      <tr>
+                       <tr>
+                          <th class="text-sm-end">تعداد اقساط:</th>
+                          <td>{{ parts|default_if_none:"بدون اقساط" }}</td>
+                        </tr>
+                        <tr>
+                          <th class="text-sm-end">شهریه کل:</th>
+                          <td class="add-comma">{{ total.total_price.price }}</td>
+                        </tr>
+                        <tr>
+                          <th class="text-sm-end">شهریه پرداخت شده:</th>
+                          <td class="add-comma">{{ pays }}</td>
+                        </tr>
+
+                        <tr class="alert alert-success fw-bold">
+                          <th class="text-sm-end">باقی مانده:</th>
+                          <td class="add-comma">{{ over }}</td>
+                        </tr>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer bg-light">
+            </div>
+          </div>
+
+
+
+{% endblock %}
+
+{% block addscript %}
+
+    <script>
+        function add_comma(number) {
+            let str = number.toString().split('.');
+            if (str[0].length >= 5) {
+                str[0] = str[0].replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+            }
+            if (str[1] && str[1].length >= 5) {
+                str[1] = str[1].replace(/(\d{3})/g, '$1 ');
+            }
+            return str.join('.');
+        }
+
+        document.querySelectorAll(".add-comma").forEach((element) => {
+            element.innerHTML = add_comma(element.innerHTML)
+        })
+    </script>
+
+{% endblock %}

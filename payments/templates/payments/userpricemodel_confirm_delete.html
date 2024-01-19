@@ -1,0 +1,58 @@
+{% extends "accounts/base-content.html" %}
+{% load static %}
+{% block titlepage %}پاک کردن شهریه{% endblock %}
+{% block addstyle %}
+
+{% endblock %}
+{% block basecontent %}
+         
+
+
+
+
+	<div class="card mb-3">
+		<div class="card-header">
+		  <div class="row flex-between-end">
+			<div class="col-auto align-self-center">
+			  <h5 class="mb-0" data-anchor="data-anchor" id="card-with-background"><a class="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="" style="padding-left: 0.375em;"></a></h5>
+			</div>
+			<div class="col-auto ms-auto">
+			  <div class="nav nav-pills nav-pills-falcon flex-grow-1" role="tablist"></div>
+			</div>
+		  </div>
+		</div>
+		<div class="card-body bg-light">
+		  <div class="tab-content">
+			<div class="tab-pane preview-tab-pane active" role="tabpanel" aria-labelledby="tab-dom-5c1a4755-b13f-4fe7-98d6-b91ab2669132" id="dom-5c1a4755-b13f-4fe7-98d6-b91ab2669132">
+			  <div class="card mb-3">
+				<div class="bg-holder d-none d-lg-block bg-card" style="background-image:url({% static 'accounts/assets/img/icons/spot-illustrations/corner-4.png'%});"></div>
+				<!--/.bg-holder-->
+				<div class="card-body position-relative">
+				  <div class="row">
+					<div class="col-lg-8">
+					  <h2>پاک کردن شهریه دانش آموز</h2>
+					  <p class="mt-2">آیا از پاک کردن شهریه
+                          "{{ user_price.user.first_name }} {{ user_price.user.last_name }}"
+                          مطمئن هستید؟؟</p>
+					  <form method="post">
+						{% csrf_token %}
+						<p class="form-buttons">
+							<input type="submit" class="btn btn-primary" value="بله">
+							<a href="{% url 'manage-student' user_price.user.StdInfoModel.pk %}" class="btn btn-outline">نه باز کشت به خانه</a>
+						</p>
+					</form>
+					
+					</div>
+				  </div>
+				</div>
+			  </div>
+			</div>
+			
+		  </div>
+		</div>
+	  </div>
+
+{% endblock %}
+
+{% block addscript %}   
+{% endblock %}
