@@ -23,7 +23,8 @@ class StyleModelForm(forms.ModelForm):
     def _apply_css_class(self):
         if self.group_fields_class:
             for field, class_name in self.fields_class.items():
-                self.fields[field].widget.attrs['class'] = f"{class_name}"
+
+                self.fields[field].widget.attrs['class'] += f" {class_name}"
 
     def _modify_theme_html_output(self, normal_row, error_row, row_ender, help_text_html, errors_on_separate_row):
         "Output HTML. Used by as_table(), as_ul(), as_p()."
