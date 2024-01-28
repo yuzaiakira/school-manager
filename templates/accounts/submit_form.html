@@ -1,7 +1,17 @@
 {% extends "base/base_submit_form.html" %}
+{% load static %}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'assets/css/persian-datepicker.min.css' %}"/>
+{% endblock %}
+
 {% block form_data %}
 
     {% csrf_token %}
     {{ form.as_div }}
 
+{% endblock %}
+
+{% block script %}
+    {% include 'base/date_picker_config.html' %}
 {% endblock %}

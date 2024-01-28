@@ -1,0 +1,19 @@
+{% load static %}
+
+    <script src="{% static 'assets/js/persian-date.min.js' %}"></script>
+    <script src="{% static 'assets/js/persian-datepicker.min.js' %}"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $(".date-picker").pDatepicker({
+            format: 'YYYY-MM-DD',
+            initialValueType: 'persian',
+            calendarType: 'persian',
+            toolbox:{
+                calendarSwitch:{
+                    enabled: false
+                }
+            },
+
+        });
+      });
+    </script>

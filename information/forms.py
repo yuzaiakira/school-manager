@@ -5,6 +5,9 @@ from information import models
 
 
 class StdInfoForm(StyleModelForm):
+    fields_class = {
+        'birthday': 'date-picker'
+    }
     group_fields_class = {
         'id_code': 'col-md-4',
 
@@ -83,7 +86,8 @@ class FatherInfoForm(StyleModelForm):
         'work_name': 'col-md-6',
     }
     fields_class = {
-        'cooperation': 'form-group'
+        'cooperation': 'form-group',
+        'birthday': 'date-picker'
     }
 
     class Meta:

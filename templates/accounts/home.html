@@ -37,7 +37,7 @@
 
                 <p class="text-muted text-center">{{ request.user.user_group_name|default_if_none:"بدون گروه" }}</p>
 
-                <ul class="list-group list-group-unbordered mb-3">
+                <ul class="list-group list-group-unbordered mb-3" style="padding-right: 0">
                   <li class="list-group-item">
                     <b>آخرین بازید:</b> <a class="float-right" dir="ltr">{{ request.user.last_login|jformat:"%Y/%m/%d %H:%M:%S" }}</a>
                   </li>

@@ -279,10 +279,10 @@ ul>.dropdown-submenu>.dropdown-menu {
   margin-left: 10px;
   margin-right: inherit;
 }
-.alert-dismissible {
-  padding-left: 4rem;
-  padding-right: inherit;
-}
+/*.alert-dismissible {*/
+/*  padding-left: 4rem;*/
+/*  padding-right: inherit;*/
+/*}*/
 .callout.callout-danger {
   border-right-color: #bd2130;
 }
@@ -750,8 +750,24 @@ nav .nav-pills.nav-sidebar.flex-column.nav-child-indent .nav.nav-treeview{
   padding-right: unset;
 }
 ul.form-group{
-    list-style: none;
+  height:100%;
+  border:none;
+  list-style: none;
+}
+ul.form-group li{
+  display: flex;
+}
+ul.form-group li label {
+  display: inline;
+  margin-left: 10px;
 }
 ul.form-group li label input {
-    margin-left: 10px;
+  float: right;
+  width: 20px;
+  margin: 0;
+  margin-top: -8px;
+  margin-left: 10px;
+}
+.form-control{
+  margin-bottom:20px
 }

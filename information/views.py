@@ -26,6 +26,9 @@ class FormSubmitStd(LoginRequiredMixin, View):
     model = models.StdInfoModel
     form = forms.StdInfoForm
 
+    form_success_text = "اطلاعات با موفقیت ثبت شده است لطفا به فرم بعدی بروید"
+    form_no_valid_text = "اطلاعات وارد شده نامعتبر میباشد"
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
 
@@ -54,14 +57,14 @@ class FormSubmitStd(LoginRequiredMixin, View):
             try:
                 context['student_form'].save()
                 context['user_form'].save()
-                context['success'] = "اطلاعات با موفقیت ثبت شده است لطفا به قرم بعدی بروید"
+                context['success'] = self.form_success_text
                 render(request, self.template_name, context)
             except ValueError:
-                context['error'] = "اطلاعات وارد شده تامعتبر میباشد"
+                context['error'] = self.form_no_valid_text
 
             return render(request, self.template_name, context)
 
-        context['error'] = "اطلاعات وارد شده تامعتبر میباشد"
+        context['error'] = self.form_no_valid_text
         return render(request, self.template_name, context)
 
     def get_context_data(self):
@@ -75,7 +78,6 @@ class FormSubmitStd(LoginRequiredMixin, View):
             context["previous_page"] = self.previous_page
 
         return context
-
 
 
 class FormSubmitFather(FormSubmitStd):
@@ -118,13 +120,14 @@ class FormSubmitFather(FormSubmitStd):
         if context['form'].is_valid():
             try:
                 context['form'].save()
-                context['success'] = "اطلاعات با موفقیت ثبت شده است لطفا به قرم بعدی بروید"
+                context['success'] = self.form_success_text
                 return render(request, self.template_name, context)
             except ValueError:
-                context['error'] = "اطلاعات وارد شده تامعتبر میباشد"
+                context['error'] = self.form_no_valid_text
 
             return render(request, self.template_name, context)
 
+        context['error'] = self.form_no_valid_text
         return render(request, self.template_name, context)
 
 
@@ -187,5 +190,3 @@ class FormSubmitPlaceInfo(FormSubmitFather):
 
     previous_page = reverse_lazy("accounts:shad")
     next_page = None
-
-

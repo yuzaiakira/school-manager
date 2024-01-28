@@ -32,7 +32,7 @@ class StdInfoModel(models.Model):
                     ('l', "چپ دست"))
     hands = models.CharField(choices=status_hands, max_length=1, verbose_name="چپ دست/ راست دست", null=True)
 
-    special_Des = models.CharField(max_length=30, verbose_name="توضیحات بیماری خاص", blank=True, null=True)
+    special_Des = models.CharField(max_length=250, verbose_name="توضیحات بیماری خاص", blank=True, null=True)
 
     family_size = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(20)],
                                       verbose_name="تعداد خانواده", null=True)
@@ -116,7 +116,7 @@ class FatherInfoModel(models.Model):
     )
     marital = models.IntegerField(choices=marital_status, verbose_name="وضعیت تاهل", null=True)
 
-    education = models.CharField(max_length=30, verbose_name="مدرک و رشته تحصیلی", null=True)
+    education = models.CharField(max_length=250, verbose_name="مدرک و رشته تحصیلی", null=True)
     work_status = (
         (0, 'بخش دولتی'),
         (1, 'خصوصی'),
@@ -124,8 +124,8 @@ class FatherInfoModel(models.Model):
         (3, 'سایر'),
     )
     work = models.IntegerField(choices=work_status, verbose_name="شاغل در", null=True)
-    work_name = models.CharField(max_length=10, verbose_name="عنوان شغلی", null=True)
-    work_place = models.CharField(max_length=30, verbose_name="محل کار", null=True)
+    work_name = models.CharField(max_length=250, verbose_name="عنوان شغلی", null=True)
+    work_place = models.CharField(max_length=250, verbose_name="محل کار", null=True)
 
     cooperation_status = (
         ("0", 'مایل به همکاری نیستم'),
@@ -135,7 +135,7 @@ class FatherInfoModel(models.Model):
         ("4", 'متناسب با شغل و تخصص'),
     )
     cooperation = MultiSelectField(max_length=5, choices=cooperation_status, verbose_name="زمینه های همکاری", null=True)
-    cooperation_des = models.CharField(max_length=30, verbose_name="توضیح بیشتر", blank=True, null=True)
+    cooperation_des = models.CharField(max_length=250, verbose_name="توضیح بیشتر", blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "مشخصات پدران دانش آموزان"
@@ -149,8 +149,8 @@ class MatherInfoModel(models.Model):
     student = models.OneToOneField('StdInfoModel', on_delete=models.CASCADE,
                                    related_name="MatherInfo", verbose_name="دانش آموز")
 
-    first_name = models.CharField(max_length=20, verbose_name="نام", null=True)
-    last_name = models.CharField(max_length=20, verbose_name="نام خانوادگی", null=True)
+    first_name = models.CharField(max_length=200, verbose_name="نام", null=True)
+    last_name = models.CharField(max_length=200, verbose_name="نام خانوادگی", null=True)
     certificate_num = models.CharField(max_length=10, verbose_name="شماره شناسنامه", null=True)
     birthday = jDateField(verbose_name="تاریخ تولد", null=True)
     id_code = models.CharField(max_length=10, verbose_name="کد ملی", null=True)
@@ -168,7 +168,7 @@ class MatherInfoModel(models.Model):
     )
     marital = models.IntegerField(choices=marital_status, verbose_name="وضعیت تاهل", null=True)
 
-    education = models.CharField(max_length=30, verbose_name="مدرک و رشته تحصیلی", null=True)
+    education = models.CharField(max_length=250, verbose_name="مدرک و رشته تحصیلی", null=True)
     work_status = (
         (0, 'بخش دولتی'),
         (1, 'خصوصی'),
@@ -176,8 +176,8 @@ class MatherInfoModel(models.Model):
         (3, 'سایر'),
     )
     work = models.IntegerField(choices=work_status, verbose_name="شاغل در", null=True)
-    work_name = models.CharField(max_length=10, verbose_name="عنوان شغلی", null=True)
-    work_place = models.CharField(max_length=30, verbose_name="محل کار", null=True)
+    work_name = models.CharField(max_length=250, verbose_name="عنوان شغلی", null=True)
+    work_place = models.CharField(max_length=250, verbose_name="محل کار", null=True)
 
     cooperation_status = (
         (0, 'مایل به همکاری نیستم'),
@@ -189,7 +189,7 @@ class MatherInfoModel(models.Model):
     cooperation = MultiSelectField(choices=cooperation_status,
                                    verbose_name="زمینه های همکاری", null=True)
 
-    cooperation_des = models.CharField(max_length=30, verbose_name="توضیح بیشتر",
+    cooperation_des = models.CharField(max_length=250, verbose_name="توضیح بیشتر",
                                        blank=True, null=True)
 
     class Meta:
@@ -204,14 +204,14 @@ class SupervisorInfoModel(models.Model):
     student = models.OneToOneField('StdInfoModel', on_delete=models.CASCADE,
                                    related_name="SupervisorInfoModel", verbose_name="دانش آموز")
 
-    first_name = models.CharField(max_length=20, verbose_name="نام", blank=True, null=True)
-    last_name = models.CharField(max_length=20, verbose_name="نام خانوادگی", blank=True, null=True)
+    first_name = models.CharField(max_length=200, verbose_name="نام", blank=True, null=True)
+    last_name = models.CharField(max_length=200, verbose_name="نام خانوادگی", blank=True, null=True)
     certificate_num = models.CharField(max_length=10, verbose_name="شماره شناسنامه", blank=True, null=True)
 
     birthday = jDateField(verbose_name="تاریخ تولد", blank=True, null=True)
     id_code = models.CharField(max_length=10, verbose_name="کد ملی", blank=True, null=True)
     certificate_place = models.CharField(max_length=20, verbose_name="محل صدور", null=True)
-    relationship = models.CharField(max_length=20, verbose_name="نسبت با دانش آموز",
+    relationship = models.CharField(max_length=50, verbose_name="نسبت با دانش آموز",
                                     blank=True, null=True)
 
     marital_status = (
@@ -222,7 +222,7 @@ class SupervisorInfoModel(models.Model):
     marital = models.IntegerField(choices=marital_status, verbose_name="وضعیت تاهل",
                                   blank=True, null=True)
 
-    education = models.CharField(max_length=30, verbose_name="مدرک و رشته تحصیلی", blank=True,
+    education = models.CharField(max_length=250, verbose_name="مدرک و رشته تحصیلی", blank=True,
                                  null=True)
     work_status = (
         (0, 'بخش دولتی'),
@@ -231,8 +231,8 @@ class SupervisorInfoModel(models.Model):
         (3, 'سایر'),
     )
     work = models.IntegerField(choices=work_status, verbose_name="شاغل در", blank=True, null=True)
-    work_name = models.CharField(max_length=10, verbose_name="عنوان شغلی", blank=True, null=True)
-    work_place = models.CharField(max_length=30, verbose_name="محل کار", blank=True, null=True)
+    work_name = models.CharField(max_length=250, verbose_name="عنوان شغلی", blank=True, null=True)
+    work_place = models.CharField(max_length=250, verbose_name="محل کار", blank=True, null=True)
 
     cooperation_status = (
         (0, 'مایل به همکاری نیستم'),
@@ -244,7 +244,7 @@ class SupervisorInfoModel(models.Model):
     cooperation = MultiSelectField(choices=cooperation_status, verbose_name="زمینه های همکاری",
                                    blank=True, null=True)
 
-    cooperation_des = models.CharField(max_length=30, verbose_name="توضیح بیشتر", blank=True,
+    cooperation_des = models.CharField(max_length=250, verbose_name="توضیح بیشتر", blank=True,
                                        null=True)
 
     class Meta:
@@ -259,7 +259,7 @@ class StdLastSchoolModel(models.Model):
     student = models.OneToOneField('StdInfoModel', on_delete=models.CASCADE,
                                    related_name="StdLastSchoolModel", verbose_name="دانش آموز")
 
-    last_school = models.CharField(max_length=20, blank=True, verbose_name="نام مدرسه سال قبلی",
+    last_school = models.CharField(max_length=50, blank=True, verbose_name="نام مدرسه سال قبلی",
                                    null=True)
 
     last_city = models.CharField(max_length=20, blank=True, verbose_name="شهرستان", null=True)
@@ -363,7 +363,7 @@ class StdShadModel(models.Model):
     smartphone = models.IntegerField(choices=smartphone_status,
                                      verbose_name="دانش آموز کدام یک از این وسایل را در اختیار دارد؟",
                                      null=True)
-    shad_phone = models.CharField(max_length=10, verbose_name="شماره تلفن فعال در شاد", null=True)
+    shad_phone = models.CharField(max_length=13, verbose_name="شماره تلفن فعال در شاد", null=True)
 
     class Meta:
         verbose_name_plural = "فعالیت های شاد دانش آموزان"
@@ -376,23 +376,23 @@ class StdShadModel(models.Model):
 class StdPlaceInfoModel(models.Model):
     student = models.OneToOneField('StdInfoModel', on_delete=models.CASCADE,
                                    related_name="StdPlaceInfoModel", verbose_name="دانش آموز")
-    main_St = models.CharField(max_length=15, verbose_name="خیابان اصلی", null=True)
-    auxiliary_St = models.CharField(max_length=15, verbose_name="خیابان فرعی", null=True)
-    main_street = models.CharField(max_length=15, verbose_name="کوچه اصلی", null=True)
-    side_alley = models.CharField(max_length=15, verbose_name="کوچه فرعی", null=True)
-    plaque = models.CharField(max_length=10, verbose_name="پلاک", null=True)
-    floor = models.CharField(max_length=10, verbose_name="طبقه", null=True)
-    postal_code = models.CharField(max_length=10, verbose_name="کد پستی", null=True)
+    main_St = models.CharField(max_length=250, verbose_name="خیابان اصلی", null=True)
+    auxiliary_St = models.CharField(max_length=250, verbose_name="خیابان فرعی", blank=True, null=True)
+    main_street = models.CharField(max_length=250, verbose_name="کوچه اصلی", null=True)
+    side_alley = models.CharField(max_length=250, verbose_name="کوچه فرعی", blank=True, null=True)
+    plaque = models.CharField(max_length=20, verbose_name="پلاک", null=True)
+    floor = models.CharField(max_length=20, verbose_name="طبقه", null=True)
+    postal_code = models.CharField(max_length=12, verbose_name="کد پستی", null=True)
 
-    home_phone = models.CharField(max_length=10, verbose_name="تلفن منزل", blank=True, null=True)
-    dad_phone = models.CharField(max_length=10, verbose_name="شماره همراه پدر", blank=True, null=True)
-    mom_phone = models.CharField(max_length=10, verbose_name="شماره همراه مادر", blank=True, null=True)
-    std_phone = models.CharField(max_length=10, verbose_name="شماره همراه دانش آموز", blank=True, null=True)
-    dad_workplace_phone = models.CharField(max_length=10, verbose_name="تلفن محل کار پدر", blank=True, null=True)
-    mom_workplace_phone = models.CharField(max_length=10, verbose_name="تلفن محل کار مادر", blank=True, null=True)
-    supervisor_phone = models.CharField(max_length=10, verbose_name="تلفن همراه سرپرست دانش آموز",
+    home_phone = models.CharField(max_length=13, verbose_name="تلفن منزل", blank=True, null=True)
+    dad_phone = models.CharField(max_length=13, verbose_name="شماره همراه پدر", blank=True, null=True)
+    mom_phone = models.CharField(max_length=13, verbose_name="شماره همراه مادر", blank=True, null=True)
+    std_phone = models.CharField(max_length=13, verbose_name="شماره همراه دانش آموز", blank=True, null=True)
+    dad_workplace_phone = models.CharField(max_length=13, verbose_name="تلفن محل کار پدر", blank=True, null=True)
+    mom_workplace_phone = models.CharField(max_length=13, verbose_name="تلفن محل کار مادر", blank=True, null=True)
+    supervisor_phone = models.CharField(max_length=13, verbose_name="تلفن همراه سرپرست دانش آموز",
                                         blank=True, null=True)
-    sms_phone = models.CharField(max_length=10, verbose_name="شماره جهت دریافت پیامک های مدرسه", blank=True, null=True)
+    sms_phone = models.CharField(max_length=13, verbose_name="شماره جهت دریافت پیامک های مدرسه", blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "اطلاعات ارتباطی با دانش آموزان"
