@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django_jalali.db.models import jDateField
@@ -90,6 +91,11 @@ class StdInfoModel(models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
+
+    def get_absolute_url(self):
+        return reverse("accounts:manage-student", kwargs={"student_id": self.pk})
+
+
 
 
 class FatherInfoModel(models.Model):

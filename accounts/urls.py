@@ -1,5 +1,7 @@
 from django.urls import path, include
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.views import LogoutView
+
 from accounts import views
 from azbankgateways.urls import az_bank_gateways_urls
 
@@ -8,9 +10,9 @@ app_name = "accounts"
 
 urlpatterns = [
     path('', views.account_view, name='home'),
-    path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout'),
-    path('search/', views.manage_std_search_view, name='search'),
+    path('login/', views.Login.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(next_page=app_name+':login'), name='logout'),
+    path('search/', views.StdList.as_view(), name='search'),
 
     path('form/', include('information.urls')),
     path('summernote/', include('django_summernote.urls')),

@@ -31,6 +31,8 @@ class FormSubmitStd(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
+        if not request.user.editable:
+            context['error'] = "زمان ویرایش فرم به اتمام رسیده شما دسترسی لازم را ندارید."
 
         student_model, created = self.model.objects.get_or_create(user=request.user)
 
@@ -95,6 +97,9 @@ class FormSubmitFather(FormSubmitStd):
 
         student_model, created = models.StdInfoModel.objects.get_or_create(user=request.user)
         form_model, created = self.model.objects.get_or_create(student=student_model)
+
+        if not request.user.editable:
+            context['error'] = "زمان ویرایش فرم به اتمام رسیده شما دسترسی لازم را ندارید."
 
         context['form'] = self.form(instance=form_model)
 

@@ -771,3 +771,7 @@ ul.form-group li label input {
 .form-control{
   margin-bottom:20px
 }
+.accordion-button::after {
+  margin-left:0;
+  margin-right: auto;
+}

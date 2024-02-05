@@ -2,13 +2,16 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from django.core.paginator import Paginator
 from django.views import View
 from django.views.generic.edit import DeleteView
+from django.views.generic.list import ListView
+
 
 from accounts.forms import (StdSearchForm, StdReportForm, StdEducationalGoodForm, StdEducationalbadForm, StdGroupForm,
                             StdUploadGroupForm, ResetPassWord)
@@ -79,41 +82,77 @@ class HomeAccount(View):
     def get_context_data(self):
         return dict()
 
-    
 
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            if request.GET.get(REDIRECT_FIELD_NAME):
-                return HttpResponseRedirect(request.GET.get(REDIRECT_FIELD_NAME))
+class Login(LoginView):
+    redirect_authenticated_user = True
+    template_name = "accounts/login.html"
+    redirect_field_name = settings.REDIRECT_FIELD_NAME
+
+    def get_success_url(self):
+        return settings.LOGIN_REDIRECT_URL
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid username or password')
+        return self.render_to_response(self.get_context_data(form=form))
+
+
+class StdList(LoginRequiredMixin, ListView):
+    login_url = settings.LOGIN_URL
+    redirect_field_name = settings.REDIRECT_FIELD_NAME
+
+    model = StdInfoModel
+    template_name = "accounts/student-list.html"
+    paginate_by = 50
+
+    form = StdSearchForm
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = self.form(initial=self.get_search_value())
+        context['current_url'] = self.get_current_url()
+        return context
+
+    def get_queryset(self):
+        data = self.get_search_value()
+        queryset = super().get_queryset()
+        filter_val = dict()
+
+        if data['id_code']:
+            filter_val.update({'id_code__icontains': data['id_code']})
+        if data['first_name']:
+            filter_val.update({'user__first_name__icontains': data['first_name']})
+        if data['last_name']:
+            filter_val.update({'user__last_name__icontains': data['last_name']})
+        if data['class_name']:
+            filter_val.update({'user__group__group_name__icontains': data['class_name']})
+
+        return queryset.filter(**filter_val).only('id_code', 'user__first_name', 'user__last_name', 'user__group__group_name')
+
+    def get_search_value(self) -> dict:
+        search_fields = dict()
+        search_fields['first_name'] = self.request.GET.get('first_name')
+        search_fields['last_name'] = self.request.GET.get('last_name')
+        search_fields['id_code'] = self.request.GET.get('id_code')
+        search_fields['class_name'] = self.request.GET.get('class_name')
+        search_fields['page'] = self.request.GET.get('page')
+
+        return search_fields
+
+
+    def get_current_url(self):
+        url = "?"
+        search_fields = self.get_search_value()
+        for key in search_fields:
+            value = search_fields[key]
+            if value and key != "page":
+                url += f"&{key}={value}"
             else:
-                return HttpResponseRedirect(reverse(account_view))
-        else:
-            context = {
-                'has_error': True,
-                'user': username,
-                'error': "خطا در ورود",
-                
-            }
-            return render(request, "accounts/login.html", context)
-        
-    else:
-        if request.user.is_authenticated and request.user.is_active:
-            return HttpResponseRedirect(reverse(account_view))
-        else:
-            return render(request, "accounts/login.html", {
-               'has_error': False, 
-            })
+                url += f"&{key}="
+
+        return url
 
 
-def logout_view(request):
-    logout(request)
-    return HttpResponseRedirect(reverse(login_view))
- 
+
 
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
 def manage_std_search_view(request):

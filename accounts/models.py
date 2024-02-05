@@ -30,6 +30,13 @@ class UserModel(AbstractUser):
     display_name = models.CharField(max_length=50, verbose_name="نام نمایشی در سایت", blank=True, null=True)
     profile_pic = models.ImageField(upload_to=rename_profile_image, default=None, null=True)
 
+    class Meta:
+        verbose_name_plural = "کاربران"
+        verbose_name = "کاربر"
+        permissions = [
+            ("user_serach", "میتواند کاربران را جستجو و مشاهده کند"),
+        ]
+
     def save(self, *args, **kwargs):
         if StdGroupModel.objects.exists():
             self.group = StdGroupModel.objects.last()

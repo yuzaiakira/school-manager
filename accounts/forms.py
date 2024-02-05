@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserChangeForm
-from django_form_style.forms import StyleModelForm
+from django_form_style.forms import StyleModelForm, StyleForm
 from accounts.models import StdGroupModel, StdReportModel, StdEducationalModel
 
 
@@ -17,15 +17,12 @@ class UserForm(StyleModelForm):
     password = None
     
 
-class StdSearchForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        list_form_control = ['first_name', 'last_name']
-        for item in list_form_control:
-            self.fields[item].widget.attrs['class'] = 'form-control'
+class StdSearchForm(StyleForm):
 
-    first_name = forms.CharField(max_length=30, required=False)        
-    last_name = forms.CharField(max_length=30, required=False)
+    first_name = forms.CharField(max_length=255, label= "نام", required=False)
+    last_name = forms.CharField(max_length=255, label= "نام خانوادگی", required=False)
+    id_code = forms.CharField(max_length=20, label= "کدملی", required=False)
+    class_name = forms.CharField(max_length=255, label= "کلاس", required=False)
 
     
 class StdReportForm(forms.ModelForm):

@@ -5,7 +5,7 @@
 {% endblock %}
 {% block body %}
     <body class="hold-transition login-page">
-       ` <div class="login-box">
+        <div class="login-box">
           <!-- /.login-logo -->
           <div class="card card-outline card-primary">
             <div class="card-header text-center">
@@ -13,13 +13,13 @@
             </div>
             <div class="card-body">
               <p class="login-box-msg">فرم ورود به سامانه</p>
-                {% if has_error %}
-                    <div class="alert alert-danger" role="alert">{{error}}</div>
+                {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">نام کاربری یا رمز عبور اشتباه است</div>
                 {% endif %}
               <form action="" method="POST">
                   {% csrf_token %}
                 <div class="input-group mb-3">
-                  <input type="text" name="username" class="form-control" placeholder="نام کاربری">
+                  <input type="text" name="{{ form.username.name }}" class="form-control" placeholder="نام کاربری">
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-user"></span>
@@ -27,7 +27,7 @@
                   </div>
                 </div>
                 <div class="input-group mb-3">
-                  <input name="password" type="password" class="form-control" placeholder="رمز عبور">
+                  <input name="{{ form.password.name }}" type="password" class="form-control" placeholder="رمز عبور">
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-lock"></span>

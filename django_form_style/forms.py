@@ -124,3 +124,23 @@ class StyleModelForm(forms.ModelForm):
             errors_on_separate_row=True,
         )
 
+
+class StyleForm(forms.Form):
+    default_field_class = 'form-control'
+    fields_class = {}
+
+    group_fields_class = {}
+    default_group_field_class = "col-md-12"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = self.default_field_class
+
+        self._apply_css_class()
+
+    def _apply_css_class(self):
+        if self.group_fields_class:
+            for field, class_name in self.fields_class.items():
+                self.fields[field].widget.attrs['class'] += f" {class_name}"
