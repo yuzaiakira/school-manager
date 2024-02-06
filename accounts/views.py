@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.views import View
@@ -96,9 +96,10 @@ class Login(LoginView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class StdList(LoginRequiredMixin, ListView):
+class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     login_url = settings.LOGIN_URL
     redirect_field_name = settings.REDIRECT_FIELD_NAME
+    permission_required = 'UserModel.user_serach'
 
     model = StdInfoModel
     template_name = "accounts/student-list.html"
@@ -586,4 +587,4 @@ def error_404_view(request, exception):
 
 
 def error_403_view(request, exception):
-    return render(request, 'accounts/page-403.html')
+    return render(request, 'base/page-403.html')

@@ -4,66 +4,68 @@
 
 {% block title %}خانه{% endblock %}
 {% block content %}
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>خانه</h1>
-          </div>
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<div class="container-fluid">
+				<div class="row mb-2">
+					<div class="col-sm-6">
+						<h1>خانه</h1>
+					</div>
 
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+				</div>
+			</div><!-- /.container-fluid -->
+		</section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-3">
+		<!-- Main content -->
+		<section class="content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-3">
 
-            <!-- Profile Image -->
-            <div class="card card-primary card-outline">
-              <div class="card-body box-profile">
-                <div class="text-center">
-                  <img class="profile-user-img img-fluid img-circle"
-                       src="{{ request.user.profile_pic_url }}"
-                       alt="User profile picture">
-                </div>
+						<!-- Profile Image -->
+						<div class="card card-primary card-outline">
+							<div class="card-body box-profile">
+								<div class="text-center">
+									<img class="profile-user-img img-fluid img-circle"
+									     src="{{ request.user.profile_pic_url }}"
+									     alt="User profile picture">
+								</div>
 
-                <h3 class="profile-username text-center">{{ request.user.site_display_name }}</h3>
+								<h3 class="profile-username text-center">{{ request.user.site_display_name }}</h3>
 
-                <p class="text-muted text-center">{{ request.user.user_group_name|default_if_none:"بدون گروه" }}</p>
+								<p class="text-muted text-center">{{ request.user.user_group_name|default_if_none:"بدون گروه" }}</p>
 
-                <ul class="list-group list-group-unbordered mb-3" style="padding-right: 0">
-                  <li class="list-group-item">
-                    <b>آخرین بازید:</b> <a class="float-right" dir="ltr">{{ request.user.last_login|jformat:"%Y/%m/%d %H:%M:%S" }}</a>
-                  </li>
-                  <li class="list-group-item">
-                    <b>عضویت:</b> <a class="float-right" dir="ltr">{{ request.user.date_joined|jformat:"%Y/%m/%d %H:%M:%S" }}</a>
-                  </li>
+								<ul class="list-group list-group-unbordered mb-3" style="padding-right: 0">
+									<li class="list-group-item">
+										<b>آخرین بازید:</b> <a class="float-right"
+										                       dir="ltr">{{ request.user.last_login|jformat:"%Y/%m/%d %H:%M:%S" }}</a>
+									</li>
+									<li class="list-group-item">
+										<b>عضویت:</b> <a class="float-right"
+										                 dir="ltr">{{ request.user.date_joined|jformat:"%Y/%m/%d %H:%M:%S" }}</a>
+									</li>
 
-                </ul>
+								</ul>
 
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+							</div>
+							<!-- /.card-body -->
+						</div>
+						<!-- /.card -->
 
 
-          </div>
-          <!-- /.col -->
-          <div class="col-md-9">
+					</div>
+					<!-- /.col -->
+					<div class="col-md-9">
 
-          </div>
-          <!-- /.col -->
-        </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div><!-- /.container-fluid -->
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
 {% endblock %}
