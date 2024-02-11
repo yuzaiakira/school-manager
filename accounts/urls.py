@@ -20,7 +20,7 @@ urlpatterns = [
     path('', include('payments.urls')),
 
     path('student/', include([
-        path('', views.student_view, name='student'),
+        path('',  views.StdList.as_view(), name='student'),
         path('<int:student_id>', views.manage_student_view, name='manage-student'),
         path('info/<int:student_id>', views.student_info_view, name='student-info'),
 

@@ -152,63 +152,19 @@ class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         return url
 
-
-
-
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def manage_std_search_view(request):
-    if request.user.is_staff:
-        std_search_form = StdSearchForm()
-    
-        first_name = request.GET.get('first_name')
-        last_name = request.GET.get('last_name')
-
-        search_fields = dict()
-
-        if first_name:
-            search_fields['student__first_name'] = first_name
-            std_search_form.fields['first_name'].widget.attrs['value'] = first_name
-
-        if last_name:
-            search_fields['student__last_name'] = last_name
-            std_search_form.fields['last_name'].widget.attrs['value'] = last_name
-
-        students = StdInfoModel.objects.filter(**search_fields)
-
-        context = {
-            'Search_Form':std_search_form,
-            'students': students,
-        }
-
-        return render(request, "accounts/manage-student-search.html", context)
-    
-    else:
-        raise Http404
-
-
-
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def student_view(request):
-    if request.user.is_staff:
-        return HttpResponseRedirect(reverse(manage_std_search_view))
-    else:
-        raise Http404
-    
-
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
 def manage_student_view(request, student_id):
     if request.user.is_staff:
-        std = get_object_or_404(StdInfoModel, pk=student_id)
-        user = get_object_or_404(UserModel, pk=std.student.pk)
+        student = get_object_or_404(StdInfoModel, pk=student_id)
 
         context = {
-            'info': std,
-            'reports': StdReportModel.objects.filter(student=std),
+            'student': student,
+            'reports': StdReportModel.objects.filter(student=student),
             'educational': {
-                'good': StdEducationalModel.objects.filter(student=std, bad=None),
-                'bad': StdEducationalModel.objects.filter(student=std, good=None),
+                'good': StdEducationalModel.objects.filter(student=student, bad=None),
+                'bad': StdEducationalModel.objects.filter(student=student, good=None),
             },
-            'payments' : UserPriceModel.objects.filter(user=user)
+            'payments' : UserPriceModel.objects.filter(user__pk=student.user.pk)
 
         }
         for total_price in context['payments']:

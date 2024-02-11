@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.templatetags.static import static
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 
 from django_jalali.db.models import jDateField
 
@@ -107,6 +108,9 @@ class StdReportModel(models.Model):
 
     def __str__(self):
         return f"{self.student.user.first_name} {self.student.user.last_name}"
+
+    def get_absolute_url(self):
+        return reverse('admin:accounts_stdreportmodel_change', args=[str(self.id)])
     
  
 class StdEducationalBadModel(models.Model):

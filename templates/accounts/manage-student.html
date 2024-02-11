@@ -1,0 +1,41 @@
+{% extends "base/main.html" %}
+{% load static %}
+{% load jformat %}
+
+{% block title %}صفحه {{ student.user.first_name }} {{ student.user.last_name }}{% endblock %}
+{% block content %}
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<div class="container-fluid">
+				<div class="row mb-2">
+					<div class="col-sm-6">
+						<h1>خانه</h1>
+					</div>
+
+				</div>
+			</div><!-- /.container-fluid -->
+		</section>
+
+		<!-- Main content -->
+		<section class="content">
+			<div class="container-fluid">
+				<div class="row">
+
+
+            {% include 'base/include/student-detail.html' %}
+
+					<!-- /.col -->
+					<div class="col-md-9">
+						{% include 'base/include/student-reports.html' %}
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+			</div><!-- /.container-fluid -->
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
+{% endblock %}

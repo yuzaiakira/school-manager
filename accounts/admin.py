@@ -16,11 +16,23 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ("وضعیت", {'fields': ('group', 'can_edit', 'display_name')}),
     )
-    list_display = ['username', 'first_name', 'last_name', 'group', 'is_staff']
-    list_filter = ['group', 'is_staff']
+    list_display = ('username', 'first_name', 'last_name', 'group', 'is_staff')
+    list_filter = ('group', 'is_staff')
 
 
 @admin.register(models.StdGroupModel)
 class StdGroupAdmin(admin.ModelAdmin):
-    list_display = ['group_name', 'can_edit']
+    list_display = ('group_name', 'can_edit')
 
+
+@admin.register(models.StdReportModel)
+class CustomUserAdmin(admin.ModelAdmin):
+    raw_id_fields = ('student', )
+
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if 'student_id' in request.GET:
+            form.base_fields['student'].initial = request.GET['student_id']
+            form.base_fields['student'].widget.attrs['readonly'] = True
+        return form
