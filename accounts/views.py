@@ -9,11 +9,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.views import View
-from django.views.generic.edit import DeleteView
 from django.views.generic.list import ListView
 
 
-from accounts.forms import (StdSearchForm, StdReportForm, StdEducationalGoodForm, StdEducationalbadForm, StdGroupForm,
+from accounts.forms import (StdSearchForm, StdReportForm, StdGroupForm,
                             StdUploadGroupForm, ResetPassWord)
 from accounts.models import UserModel, StdGroupModel, StdReportModel, StdEducationalModel
 from accounts.functions import import_csv_file
@@ -54,8 +53,6 @@ def account_view(request):
     }
     if request.user.is_staff:
       pass
-
-
 
     return render(request, "accounts/home.html", context)
 
@@ -127,7 +124,10 @@ class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         if data['class_name']:
             filter_val.update({'user__group__group_name__icontains': data['class_name']})
 
-        return queryset.filter(**filter_val).only('id_code', 'user__first_name', 'user__last_name', 'user__group__group_name')
+        return queryset.filter(**filter_val).only('id_code',
+                                                  'user__first_name',
+                                                  'user__last_name',
+                                                  'user__group__group_name')
 
     def get_search_value(self) -> dict:
         search_fields = dict()
@@ -138,8 +138,6 @@ class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         search_fields['page'] = self.request.GET.get('page')
 
         return search_fields
-
-
     def get_current_url(self):
         url = "?"
         search_fields = self.get_search_value()
@@ -152,6 +150,7 @@ class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
         return url
 
+
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
 def manage_student_view(request, student_id):
     if request.user.is_staff:
@@ -160,11 +159,8 @@ def manage_student_view(request, student_id):
         context = {
             'student': student,
             'reports': StdReportModel.objects.filter(student=student),
-            'educational': {
-                'good': StdEducationalModel.objects.filter(student=student, bad=None),
-                'bad': StdEducationalModel.objects.filter(student=student, good=None),
-            },
-            'payments' : UserPriceModel.objects.filter(user__pk=student.user.pk)
+            'educational': StdEducationalModel.get_data(student_id),
+            'payments': UserPriceModel.objects.filter(user__pk=student.user.pk)
 
         }
         for total_price in context['payments']:
@@ -176,8 +172,6 @@ def manage_student_view(request, student_id):
     
     else:
         raise Http404
-    
-    
 
 
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
@@ -250,208 +244,6 @@ def report_create_view(request, student_id):
     
     else:
         raise Http404
-
-
-
-class ReportDelete(DeleteView):
-    model = StdReportModel
-    context_object_name = 'report'
-
- 
-    def form_valid(self, form):
-        messages.success(self.request, "The report was deleted successfully.")
-        return super(ReportDelete, self).form_valid(form)
-
-    def get_success_url(self):
-        object = self.get_object()
-        std_id = object.student.pk
-        return reverse_lazy('manage-student', kwargs={'student_id': std_id})
- 
- 
-    
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def report_update_view(request, report_id):
-    if request.user.is_staff:
-        has_error = False
-        report = get_object_or_404(StdReportModel, pk=report_id)
-        StdReport_Form = StdReportForm(instance=report)
-        
-        if request.method == "POST":
-            if StdReport_Form.is_valid:
-
-                StdReport_Form = StdReportForm(request.POST, instance=report)
-                try:
-                    StdReport_Form.save()
-                except ValueError:
-                    has_error = True
-            
-            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': report.student.pk}))    
-        
-
-        context={
-            'report': StdReport_Form,
-            'student_id': report.student.pk,
-            'text': "ویرایش",
-            'has_error': has_error
-        }    
-        return render(request, "accounts/manage-student-add-report.html", context)
-    
-    else:
-        raise Http404
-
-
-
-
-
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def Educational_good_create_view(request, student_id):
-    if request.user.is_staff:
-        has_error = False
-        student = get_object_or_404(StdInfoModel, pk=student_id)
-        StdEducational_Form = StdEducationalGoodForm()
-        
-        if request.method == "POST":
-           
-            if StdEducational_Form.is_valid:
-                
-                educational = StdEducationalModel.objects.create(student=student)
-                StdEducational_Form = StdEducationalGoodForm(request.POST, instance=educational)
-                try:
-                    StdEducational_Form.save()
-                except ValueError:
-                    has_error= True
-            
-            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': student_id}))    
-        
-
-        context={
-            'educational': StdEducational_Form,
-            'student_id': student_id,
-            'type': "افزودن",
-            'text': "مثبت",
-            'has_error': has_error
-        }    
-        return render(request, "accounts/manage-student-educational.html", context)
-    
-    else:
-        raise Http404
-    
-    
-
-class EducationalDelete(DeleteView):
-    model = StdEducationalModel
-    context_object_name = 'educational'
-
- 
-    def form_valid(self, form):
-        messages.success(self.request, "The report was deleted successfully.")
-        return super(EducationalDelete, self).form_valid(form)
-
-    def get_success_url(self):
-        object = self.get_object()
-        std_id = object.student.pk
-        return reverse_lazy('manage-student', kwargs={'student_id': std_id})
- 
- 
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def Educational_good_update_view(request, edu_id):
-    if request.user.is_staff:
-        has_error = False
-        edu = get_object_or_404(StdEducationalModel, pk=edu_id)
-        
-        StdEducational_Form = StdEducationalGoodForm(instance=edu)
-        
-        if request.method == "POST":
-            if StdEducational_Form.is_valid:
-
-                StdEducational_Form = StdEducationalGoodForm(request.POST, instance=edu)
-                try:
-                    StdEducational_Form.save()
-                except ValueError:
-                    has_error = True
-            
-            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': edu.student.pk}))    
-        
-
-        context={
-            'educational': StdEducational_Form,
-            'student_id': edu.student.pk,
-            'type': "ویرایش",
-            'text': "مثبت",
-            'has_error': has_error
-        }    
-        return render(request, "accounts/manage-student-educational.html", context)
-    
-    else:
-        raise Http404
-
-
-
-
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def Educational_bad_create_view(request, student_id):
-    if request.user.is_staff:
-        has_error = False
-        student = get_object_or_404(StdInfoModel, pk=student_id)
-        StdEducational_Form = StdEducationalbadForm()
-        
-        if request.method=="POST":
-            if StdEducational_Form.is_valid:
-                educational = StdEducationalModel.objects.create(student=student)
-                StdEducational_Form = StdEducationalbadForm(request.POST, instance=educational)
-                try:
-                    StdEducational_Form.save()
-                except ValueError:
-                    has_error = True
-            
-            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': student_id}))    
-        
-
-        context={
-            'educational': StdEducational_Form,
-            'student_id': student_id,
-            'type': "افزودن",
-            'text': "منفی",
-            'has_error': has_error
-        }    
-        return render(request, "accounts/manage-student-educational.html", context)
-    
-    else:
-        raise Http404
-    
-
-
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def Educational_bad_update_view(request, edu_id):
-    if request.user.is_staff:
-        has_error= False
-        edu = get_object_or_404(StdEducationalModel, pk=edu_id)
-        StdEducational_Form = StdEducationalGoodForm(instance=edu)
-        
-        if request.method == "POST":
-            if StdEducational_Form.is_valid:
-                StdEducational_Form = StdEducationalGoodForm(request.POST, instance=edu)
-                try:
-                    StdEducational_Form.save()
-                except ValueError:
-                    has_error = True
-            
-            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': edu.student.pk}))    
-        
-
-        context={
-            'educational': StdEducational_Form,
-            'student_id': edu.student.pk,
-            'type': "ویرایش",
-            'text': "مثبت",
-            'has_error': has_error
-        }    
-        return render(request, "accounts/manage-student-educational.html", context)
-    
-    else:
-        raise Http404
-
-
 
 
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 

@@ -103,8 +103,8 @@ class StdReportModel(models.Model):
     score = models.FloatField(verbose_name="نمره", blank=True, null=True)
     
     class Meta:
-        verbose_name_plural = "فعالیت های انضباطی"
-        verbose_name = "فعالیت انضباطی"
+        verbose_name_plural = "فعالیت های دانش آموزان"
+        verbose_name = "فعالیت دانش آموز"
 
     def __str__(self):
         return f"{self.student.user.first_name} {self.student.user.last_name}"
@@ -139,12 +139,12 @@ class StdEducationalModel(models.Model):
     student = models.ForeignKey('information.StdInfoModel', on_delete=models.CASCADE,
                                 related_name="StdEducationalModel", verbose_name="دانش آموز")
     
-    good = models.ForeignKey('StdEducationalGoodModel', on_delete=models.CASCADE,
+    positive = models.ForeignKey('StdEducationalGoodModel', on_delete=models.CASCADE,
                              related_name="StdEducationalGoodModel",
                              verbose_name="موارد مثبت", null=True,
                              blank=True, default=None)
     
-    bad = models.ForeignKey('StdEducationalBadModel', on_delete=models.CASCADE,
+    negative = models.ForeignKey('StdEducationalBadModel', on_delete=models.CASCADE,
                             related_name="StdEducationalBadModel",
                             verbose_name="موارد منفی", null=True,
                             blank=True, default=None)
@@ -153,8 +153,8 @@ class StdEducationalModel(models.Model):
     score = models.FloatField(verbose_name="نمره", blank=True, null=True)
     
     class Meta:
-        verbose_name_plural = "پرونده های تربیتی "
-        verbose_name = "پرونده تربیتی "
+        verbose_name_plural = "پرونده های انضباطی "
+        verbose_name = "پرونده انضباطی "
 
     def __str__(self):
         return f"برای {self.student.user.first_name} {self.student.user.last_name}"
@@ -162,8 +162,8 @@ class StdEducationalModel(models.Model):
     @classmethod
     def get_data(cls, student_id):
         return {
-            'good': cls.objects.filter(Q(student=student_id) & Q(bad=None)),
-            'bad': cls.objects.filter(Q(student=student_id) & Q(good=None)),
+            'positive': cls.objects.filter(Q(student=student_id) & Q(negative=None)),
+            'negative': cls.objects.filter(Q(student=student_id) & Q(positive=None)),
         }
     
     

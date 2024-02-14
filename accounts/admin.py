@@ -29,10 +29,35 @@ class StdGroupAdmin(admin.ModelAdmin):
 class CustomUserAdmin(admin.ModelAdmin):
     raw_id_fields = ('student', )
 
-
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        if 'student_id' in request.GET:
-            form.base_fields['student'].initial = request.GET['student_id']
+        student_id = request.GET.get('student_id')
+
+        if student_id:
+            form.base_fields['student'].initial = student_id
             form.base_fields['student'].widget.attrs['readonly'] = True
+        return form
+
+
+@admin.register(models.StdEducationalModel)
+class StdEducationalAdmin(admin.ModelAdmin):
+    raw_id_fields = ('student', )
+
+    def get_form(self, request, obj=None, **kwargs):
+        _type = request.GET.get('type')
+        if _type and _type == "positive":
+            self.exclude = ('negative', )
+
+        elif _type and _type == "negative":
+            self.exclude = ('positive', )
+        else:
+            self.exclude = None
+
+        form = super().get_form(request, obj, **kwargs)
+        student_id = request.GET.get('student_id')
+
+        if student_id:
+            form.base_fields['student'].initial = student_id
+            form.base_fields['student'].widget.attrs['readonly'] = True
+
         return form

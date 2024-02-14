@@ -1,0 +1,263 @@
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">کاربر ها</h3>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+
+	  <div class="table-header mb-5">
+		  <div class="float-left">
+				<h4>موارد مثبت</h4>
+		  </div>
+		  <div class="float-right">
+			  {% if perms.accounts.add_stdeducationalmodel %}
+					<a href="{% url 'admin:accounts_stdeducationalmodel_add' %}?student_id={{ student.id }}&type=positive">افزودن مورد جدید</a>
+			  {% endif %}
+		  </div>
+	  </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>کارها و فعالیت ها</th>
+          <th>تعداد</th>
+          <th>نمره متعلقه</th>
+          <th style="width:50px">عملیات</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><a href="/account/student/1">مهدی مهری</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/1">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/1">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/2">عادل کامل</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/2">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/2">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/3">علی مهری</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/3">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/3">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/4"> </a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/4">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/4">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/5">مهدی مهری</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/5">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/5">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+	<div class="row d-flex justify-content-center">
+		<hr class="border border-2 opacity-30" style="width: 92%">
+	</div>
+	<!-- /.card-header -->
+  <div class="card-body">
+
+	  <div class="table-header mb-5">
+		  <div class="float-left">
+				<h4>موارد منفی</h4>
+		  </div>
+		  <div class="float-right">
+				{% if perms.accounts.add_stdeducationalmodel %}
+					<a href="{% url 'admin:accounts_stdeducationalmodel_add' %}?student_id={{ student.id }}&type=negative">افزودن مورد جدید</a>
+			  {% endif %}
+		  </div>
+	  </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>کارها و فعالیت ها</th>
+          <th>تعداد</th>
+          <th>نمره متعلقه</th>
+          <th style="width:50px">عملیات</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td><a href="/account/student/1">مهدی مهری</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/1">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/1">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/2">عادل کامل</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/2">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/2">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/3">علی مهری</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/3">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/3">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/4"> </a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/4">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/4">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td><a href="/account/student/5">مهدی مهری</a></td>
+          <td>0781109973</td>
+          <td>101</td>
+          <td>
+
+              <div class="dropdown">
+                  <a class="btn btn-warning dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-bars"></i>
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="/account/student/5">پروفایل</a></li>
+                    <li><a class="dropdown-item" href="/account/student/info/5">اطلاعات</a></li>
+                  </ul>
+              </div>
+
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
