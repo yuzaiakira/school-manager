@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q
 from django.templatetags.static import static
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.urls import reverse
 
 from django_jalali.db.models import jDateField
@@ -140,14 +141,14 @@ class StdEducationalModel(models.Model):
                                 related_name="StdEducationalModel", verbose_name="دانش آموز")
     
     positive = models.ForeignKey('StdEducationalGoodModel', on_delete=models.CASCADE,
-                             related_name="StdEducationalGoodModel",
-                             verbose_name="موارد مثبت", null=True,
-                             blank=True, default=None)
+                                 related_name="StdEducationalGoodModel",
+                                 verbose_name="موارد مثبت", null=True,
+                                 blank=True, default=None)
     
     negative = models.ForeignKey('StdEducationalBadModel', on_delete=models.CASCADE,
-                            related_name="StdEducationalBadModel",
-                            verbose_name="موارد منفی", null=True,
-                            blank=True, default=None)
+                                 related_name="StdEducationalBadModel",
+                                 verbose_name="موارد منفی", null=True,
+                                 blank=True, default=None)
     
     number = models.IntegerField(verbose_name="تعداد", blank=True, null=True)
     score = models.FloatField(verbose_name="نمره", blank=True, null=True)
@@ -157,7 +158,13 @@ class StdEducationalModel(models.Model):
         verbose_name = "پرونده انضباطی "
 
     def __str__(self):
-        return f"برای {self.student.user.first_name} {self.student.user.last_name}"
+        if self.positive and self.negative:
+            return f" پرونده غیر معتبر برای { self.student} "
+        elif self.positive:
+            return f"{self.positive} - {self.student}"
+        elif self.negative:
+            return f"{self.negative} - {self.student}"
+        return f"رکورد نامعتبر"
 
     @classmethod
     def get_data(cls, student_id):
@@ -165,5 +172,12 @@ class StdEducationalModel(models.Model):
             'positive': cls.objects.filter(Q(student=student_id) & Q(negative=None)),
             'negative': cls.objects.filter(Q(student=student_id) & Q(positive=None)),
         }
-    
+
+    def get_absolute_url(self):
+        return reverse("accounts:manage-student", kwargs={"student_id": self.student.pk})
+
+    def clean(self):
+        super().clean()
+        if self.positive and self.negative:
+            raise ValidationError("شما نمیتوانید هر دو فیلد مثبت و منفی را پرکنید")
     

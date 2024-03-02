@@ -42,6 +42,10 @@ class CustomUserAdmin(admin.ModelAdmin):
 @admin.register(models.StdEducationalModel)
 class StdEducationalAdmin(admin.ModelAdmin):
     raw_id_fields = ('student', )
+    list_display = ('__str__', 'number', 'score')
+    list_editable = ('number', 'score')
+    search_fields = ('student__id_code', 'student__user__first_name', 'student__user__last_name')
+    list_filter = ('negative', 'positive')
 
     def get_form(self, request, obj=None, **kwargs):
         _type = request.GET.get('type')
