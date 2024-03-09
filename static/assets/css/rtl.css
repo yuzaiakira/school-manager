@@ -403,7 +403,7 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
   border-radius: 0 !important;
 }
 .custom-file-input:lang(en)~.custom-file-label::after {
-  content: "انتخاب فایل";
+  content: "Ø§Ù†ØªØ®Ø§Ø¨ ÙØ§ÛŒÙ„";
 }
 .custom-file-label {
 /*  border-left-width: 0;*/
@@ -763,9 +763,8 @@ ul.form-group li label {
 }
 ul.form-group li label input {
   float: right;
-  width: 20px;
+  width: 38px;
   margin: 0;
-  margin-top: -8px;
   margin-left: 10px;
 }
 .form-control{

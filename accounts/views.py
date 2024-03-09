@@ -5,21 +5,22 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.conf import settings
 from django.core.paginator import Paginator
 from django.views import View
 from django.views.generic.list import ListView
+from django.views.generic.base import TemplateView
 
 
 from accounts.forms import (StdSearchForm, StdReportForm, StdGroupForm,
-                            StdUploadGroupForm, ResetPassWord)
+                            StdUploadGroupForm, ResetPassWord, UserForm)
 from accounts.models import UserModel, StdGroupModel, StdReportModel, StdEducationalModel
 from accounts.functions import import_csv_file
+from accounts.mixin import UserAuthorizationMixin
 
 from information.models import (StdInfoModel, FatherInfoModel, MatherInfoModel, SupervisorInfoModel, StdLastSchoolModel,
                                 StdCompetitionsModel, StdShadModel, StdPlaceInfoModel)
-
+import information.forms as info_form
 from payments.models import UserPriceModel
 from payments.functions import price_peer_part
 from blog.models import PostModel
@@ -93,9 +94,7 @@ class Login(LoginView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
-    login_url = settings.LOGIN_URL
-    redirect_field_name = settings.REDIRECT_FIELD_NAME
+class StdList(UserAuthorizationMixin, ListView):
     permission_required = 'UserModel.user_serach'
 
     model = StdInfoModel
@@ -151,99 +150,66 @@ class StdList(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         return url
 
 
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def manage_student_view(request, student_id):
-    if request.user.is_staff:
-        student = get_object_or_404(StdInfoModel, pk=student_id)
+class ManageStudents(UserAuthorizationMixin, TemplateView):
+    permission_required = 'StdInfoModel.view_stdinfomodel'
+    template_name = "accounts/manage-student.html"
 
-        context = {
-            'student': student,
-            'reports': StdReportModel.objects.filter(student=student),
-            'educational': StdEducationalModel.get_data(student_id),
-            'payments': UserPriceModel.objects.filter(user__pk=student.user.pk)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        student_id = self.kwargs['student_id']
 
-        }
+        context["student"] = get_object_or_404(StdInfoModel, pk=student_id)
+        context["reports"] = StdReportModel.objects.filter(student=context["student"])
+        context["educational"] = StdEducationalModel.get_data(student_id)
+        context["payments"] = UserPriceModel.objects.filter(user__pk=context["student"].user.pk)
+
+        # TODO: make pyment
         for total_price in context['payments']:
             if not price_peer_part(total_price):
                 total_price.finished = True
                 total_price.save
 
-        return render(request, "accounts/manage-student.html", context)
-    
-    else:
-        raise Http404
+        return context
 
 
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def student_info_view(request, student_id):
-    if request.user.is_staff:
-        #TODO: fix bug
-        student = get_object_or_404(StdInfoModel, pk=student_id)
-        father = get_object_or_404(FatherInfoModel, child=student)
-        mather = get_object_or_404(MatherInfoModel, child=student)
-        supervisor = get_object_or_404(SupervisorInfoModel, child=student)
-        lastschool = get_object_or_404(StdLastSchoolModel, student=student)
-        competitions = get_object_or_404(StdCompetitionsModel, student=student)
-        shad = get_object_or_404(StdShadModel, student=student)
-        place = get_object_or_404(StdPlaceInfoModel, student=student)
-        
-        # StdInfo_Form = StdInfoForm(instance=student)
-        # User_Form = UserForm(instance=student.student)
-        # FatherInfo_Form = FatherInfoForm(instance=father)
-        # MotherInfo_Form = MotherInfoForm(instance=mather)
-        # SupervisorInfo_Form = SupervisorInfoForm(instance=supervisor)
-        # StdLastSchool_Form = StdLastSchoolForm(instance=lastschool)
-        # StdCompetitions_Form = StdCompetitionsForm(instance=competitions)
-        # StdShad_Form = StdShadForm(instance=shad)
-        # StdPlaceInfo_Form = StdPlaceInfoForm(instance=place)
-        
-        context={
-            # 'StdInfo': StdInfo_Form,
-            # 'uinfo': User_Form,
-            # 'FatherInfo': FatherInfo_Form,
-            # 'MotherInfo': MotherInfo_Form,
-            # 'SupervisorInfo': SupervisorInfo_Form,
-            # 'LastSchool': StdLastSchool_Form,
-            # 'Competitions': StdCompetitions_Form,
-            # 'Shad': StdShad_Form,
-            # 'PlaceInfo': StdPlaceInfo_Form,
-        } 
-        
-        return render(request, "accounts/manage-student-info.html", context)
-    
-    else:
-        raise Http404
+class StudentInfo(UserAuthorizationMixin, TemplateView):
+    permission_required = 'StdInfoModel.view_stdinfomodel'
+    template_name = "accounts/manage-student-info.html"
+    models =[StdInfoModel, FatherInfoModel, MatherInfoModel, SupervisorInfoModel, StdLastSchoolModel,
+             StdCompetitionsModel, StdShadModel, StdPlaceInfoModel]
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        student_id = self.kwargs['student_id']
 
-@login_required(None,REDIRECT_FIELD_NAME) 
-def report_create_view(request, student_id):
-    if request.user.is_staff:
-        has_error = False
-        student = get_object_or_404(StdInfoModel, pk=student_id)
-        StdReport_Form = StdReportForm()
-        
-        if request.method=="POST":
-            if StdReport_Form.is_valid:
-                Report = StdReportModel.objects.create(student=student)
-                StdReport_Form = StdReportForm(request.POST, instance=Report)
-                try:
-                    StdReport_Form.save()
-                except ValueError:
-                    has_error = True
-            
-            return HttpResponseRedirect(reverse_lazy('manage-student', kwargs={'student_id': student_id}))    
-        
+        context['student'] = get_object_or_404(StdInfoModel, pk=student_id)
+        context['forms'] = self.get_forms(context['student'])
 
-        context={
-            'report': StdReport_Form,
-            'student_id': student_id,
-            'text': "افزودن",
-            'has_error': has_error
-        }    
-        return render(request, "accounts/manage-student-add-report.html", context)
-    
-    else:
-        raise Http404
+        return context
+
+    def get_forms(self, student) -> list:
+        forms = list()
+
+        father, father_status = FatherInfoModel.objects.get_or_create(student=student)
+        mather, mather_status = MatherInfoModel.objects.get_or_create(student=student)
+        supervisor, supervisor_status = SupervisorInfoModel.objects.get_or_create(student=student)
+        lastschool, lastschool_status = StdLastSchoolModel.objects.get_or_create(student=student)
+        competitions, competitions_status =StdCompetitionsModel.objects.get_or_create(student=student)
+        shad, shad_status = StdShadModel.objects.get_or_create(student=student)
+        place, place_status = StdPlaceInfoModel.objects.get_or_create(student=student)
+
+        # append forms to list
+        forms.append(UserForm(instance=student.user))
+        forms.append(info_form.StdInfoForm(instance=student))
+        forms.append(info_form.FatherInfoForm(instance=father))
+        forms.append(info_form.MotherInfoForm(instance=mather))
+        forms.append(info_form.SupervisorInfoForm(instance=supervisor))
+        forms.append(info_form.StdLastSchoolForm(instance=lastschool))
+        forms.append(info_form.StdCompetitionsForm(instance=competitions))
+        forms.append(info_form.StdShadForm(instance=shad))
+        forms.append(info_form.StdPlaceInfoForm(instance=place))
+
+        return forms
 
 
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
