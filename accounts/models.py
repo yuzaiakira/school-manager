@@ -18,6 +18,9 @@ class StdGroupModel(models.Model):
     def __str__(self):
         return str(self.group_name)
 
+    def get_absolute_url(self):
+        return reverse('accounts:group-upload', args=[str(self.id)])
+
     class Meta:
         verbose_name_plural = "کلاس ها"
         verbose_name = "کلاس"

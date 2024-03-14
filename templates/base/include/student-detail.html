@@ -24,8 +24,7 @@
 										                 dir="ltr">{{ student.user.date_joined|jformat:"%Y/%m/%d %H:%M:%S" }}</span>
 									</li>
 									<li class="list-group-item">
-										<b>نام پدر:</b> <span class="float-right"
-										                 dir="ltr">{{ student.FatherInfoModel.first_name}}</span>
+										<b>نام پدر:</b> <span class="float-right" dir="ltr">{{ student.FatherInfoModel.first_name|default_if_none:"وارد نشده" }}</span>
 									</li>
 
 								</ul>

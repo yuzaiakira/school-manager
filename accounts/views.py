@@ -175,8 +175,6 @@ class ManageStudents(UserAuthorizationMixin, TemplateView):
 class StudentInfo(UserAuthorizationMixin, TemplateView):
     permission_required = 'StdInfoModel.view_stdinfomodel'
     template_name = "accounts/manage-student-info.html"
-    models =[StdInfoModel, FatherInfoModel, MatherInfoModel, SupervisorInfoModel, StdLastSchoolModel,
-             StdCompetitionsModel, StdShadModel, StdPlaceInfoModel]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -212,26 +210,17 @@ class StudentInfo(UserAuthorizationMixin, TemplateView):
         return forms
 
 
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def group_view(request):
-    if request.user.is_staff:
-        group = StdGroupModel.objects.all()
-
-        context={
-            'groups': group
-        }
-        return render(request, "accounts/manage-student-group.html", context)
-    
-    else:
-        raise Http404
+class GroupList(UserAuthorizationMixin, ListView):
+    permission_required = 'StdGroupModel.view_stdgroupmodel'
+    model = StdGroupModel
+    paginate_by = 20
 
 
-
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
+@login_required(redirect_field_name=REDIRECT_FIELD_NAME)
 def group_upload_view(request, group_id):
     if request.user.is_staff:
         get_group = get_object_or_404(StdGroupModel, pk=group_id)
-        form  = StdGroupForm(instance=get_group)
+        form = StdGroupForm(instance=get_group)
         
         if request.method == 'POST':  
             fileform = StdUploadGroupForm(request.POST, request.FILES)  
