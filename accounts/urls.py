@@ -26,7 +26,7 @@ urlpatterns = [
 
     path('group/', include([
             path('', views.GroupList.as_view(), name='group'),
-            path('upload/<int:group_id>', views.group_upload_view, name='group-upload'),
+            path('upload/<int:group_id>', views.GroupUpload.as_view(), name='group-upload'),
             ])),
 
     path('profile/', include([

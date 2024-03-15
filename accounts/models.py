@@ -28,7 +28,7 @@ class StdGroupModel(models.Model):
 
 class UserModel(AbstractUser):
     group = models.ForeignKey('StdGroupModel', related_name="StdGroupModel",
-                              on_delete=models.CASCADE, verbose_name="سال ورودی دانش آموز",
+                              on_delete=models.CASCADE, verbose_name="کلاس دانش آموز",
                               blank=True, null=True)
     
     can_edit = models.BooleanField(default=False, verbose_name="اجازه ویرایش به این دانش آموز را میدهید؟")
@@ -43,9 +43,9 @@ class UserModel(AbstractUser):
         ]
 
     def save(self, *args, **kwargs):
-        if StdGroupModel.objects.exists():
+        if StdGroupModel.objects.exists() and not self.group:
             self.group = StdGroupModel.objects.last()
-        else:
+        elif not self.group:
             self.group = None
 
         super().save(*args, **kwargs)

@@ -1,19 +1,19 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, Http404
-from django.urls import reverse, reverse_lazy
+from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
+from django.views.generic.edit import FormView
 
 
-from accounts.forms import (StdSearchForm, StdReportForm, StdGroupForm,
-                            StdUploadGroupForm, ResetPassWord, UserForm)
+from accounts.forms import (StdSearchForm, StdUploadGroupForm, ResetPassWord, UserForm)
 from accounts.models import UserModel, StdGroupModel, StdReportModel, StdEducationalModel
 from accounts.functions import import_csv_file
 from accounts.mixin import UserAuthorizationMixin
@@ -213,34 +213,19 @@ class StudentInfo(UserAuthorizationMixin, TemplateView):
 class GroupList(UserAuthorizationMixin, ListView):
     permission_required = 'StdGroupModel.view_stdgroupmodel'
     model = StdGroupModel
-    paginate_by = 20
 
 
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME)
-def group_upload_view(request, group_id):
-    if request.user.is_staff:
-        get_group = get_object_or_404(StdGroupModel, pk=group_id)
-        form = StdGroupForm(instance=get_group)
-        
-        if request.method == 'POST':  
-            fileform = StdUploadGroupForm(request.POST, request.FILES)  
-            if fileform.is_valid():  
-                import_csv_file(request.FILES['file'], get_group, UserModel)  
-                
-                return render(request, "accounts/page-upload-successful.html")
-        else:  
-            fileform = StdUploadGroupForm()  
-            
-            context={
-                'group': form,
-                'formfile': fileform,
-                
-            }
-            return render(request, "accounts/manage-student-group-upload.html", context)
-    
-    else:
-        raise Http404
+class GroupUpload(UserAuthorizationMixin, FormView):
+    permission_required = 'UserModel.add_usermodel'
+    form_class = StdUploadGroupForm
+    template_name = 'accounts/upload_form.html'
+    success_url = reverse_lazy('accounts:group')
 
+    def form_valid(self, form):
+        group_id = self.kwargs['group_id']
+        group = get_object_or_404(StdGroupModel, pk=group_id)
+        form.import_from_file(group)
+        return super().form_valid(form)
 
 
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME) 

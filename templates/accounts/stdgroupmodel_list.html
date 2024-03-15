@@ -61,7 +61,7 @@
                     <tr>
                       <td><a href="{{ object.get_absolute_url }}">{{ object|default:"ثبت نشده"|default_if_none:"ثبت نشده" }}</a></td>
                       <td>
-	                      {% if group.can_edit %}
+	                      {% if object.can_edit %}
 												قابل ویرایش
                         {% else %}
                         غیر قابل ویرایش
@@ -89,21 +89,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer clearfix">
-                <ul class="pagination pagination-sm m-0 float-right">
 
-                    {% if page_obj.has_previous %}
-                         <li class="page-item"><a class="page-link" href="{{ current_url }}{{ page_obj.previous_page_number }}"><i class="fa-solid fa-angle-right"></i></a></li>
-                    {% endif %}
-
-                    {% for page_number in page_obj.paginator.page_range%}
-                        <li class="page-item {% if page_obj.number == page_number %}active{% endif %}"><a class="page-link" href="{{ current_url }}{{ page_number }}">{{ page_number }}</a></li>
-                    {% endfor %}
-
-                    {% if page_obj.has_next %}
-                        <li class="page-item"><a class="page-link" href="{{ current_url }}{{ page_obj.next_page_number }}"><i class="fa-solid fa-angle-left"></i></a></li>
-                    {% endif %}
-
-                </ul>
               </div>
             </div>
 

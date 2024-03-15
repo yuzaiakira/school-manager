@@ -22,11 +22,13 @@
             <div class="col-md-12">
                 <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">فرم ثبت اطلاعات</h3>
+                <h3 class="card-title">{% block form_title %}فرم ثبت اطلاعات{% endblock %}</h3>
+
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="post">
+
+              <form {% block form_attr %}method="post"{% endblock %}>
               <div class="card-body">
                 <fieldset  {% if not request.user.editable%}disabled{% endif %}>
                         {% include 'base/base_submit_form_alert.html' %}
