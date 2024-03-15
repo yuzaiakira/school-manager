@@ -4,10 +4,13 @@ import pandas as pd
 from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
+from django.core.exceptions import ValidationError
+
 from django_form_style.forms import StyleModelForm, StyleForm
 
 from accounts.models import UserModel
+
 
 class UserForm(StyleModelForm):
     group_fields_class = {
@@ -58,6 +61,7 @@ class StdUploadGroupForm(forms.Form):
         file = self.cleaned_data["file"]
         base_file = os.path.join(settings.BASE_DIR, 'safedir/csv/') + file.name
         # create file
+        # TODO: check file then created
         with open(base_file, 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
@@ -65,13 +69,32 @@ class StdUploadGroupForm(forms.Form):
         return base_file
 
 
-class ResetPassWord(forms.Form):
+class ResetPassWord(StyleForm):
     last_password = forms.CharField(max_length=128, widget=forms.PasswordInput(), label="رمز عبور قبلی")
     new_password = forms.CharField(max_length=128, widget=forms.PasswordInput(), label="رمز عبور جدید")
-    Confirm_password = forms.CharField(max_length=128, widget=forms.PasswordInput(), label="تایید رمز عبور")
-    
+    confirm_password = forms.CharField(max_length=128, widget=forms.PasswordInput(), label="تایید رمز عبور")
+
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        list_form_control = ['last_password', 'new_password', 'Confirm_password']
-        for item in list_form_control:
-            self.fields[item].widget.attrs['class'] = 'form-control'
+
+    def reset_password(self):
+        new_password = self.cleaned_data['new_password']
+        user = self.request.user
+        user.set_password(new_password)
+        user.save()
+
+    def clean_last_password(self):
+        last_password = self.cleaned_data["last_password"]
+        user_password = self.request.user.password
+
+        if not check_password(last_password, user_password):
+            raise ValidationError("رمز عبور قبلی صحیح نمیباشد.")
+        return last_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        confirm_password = cleaned_data.get('confirm_password')
+        new_password = cleaned_data.get('new_password')
+        if not confirm_password == new_password:
+            raise ValidationError("عدم همخوانی رمز عبور جدید و تایید آن.")

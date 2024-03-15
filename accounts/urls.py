@@ -30,7 +30,7 @@ urlpatterns = [
             ])),
 
     path('profile/', include([
-        path('reset-password/', views.reset_password_view, name='reset-password'),
+        path('reset-password/', views.ResetPassword.as_view(), name='reset-password'),
     ])),
 
 ]

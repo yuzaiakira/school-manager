@@ -1,12 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import Http404
 from django.contrib import messages
-from django.contrib.auth import authenticate
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import Paginator
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
@@ -14,9 +12,8 @@ from django.views.generic.edit import FormView
 
 
 from accounts.forms import (StdSearchForm, StdUploadGroupForm, ResetPassWord, UserForm)
-from accounts.models import UserModel, StdGroupModel, StdReportModel, StdEducationalModel
-from accounts.functions import import_csv_file
-from accounts.mixin import UserAuthorizationMixin
+from accounts.models import StdGroupModel, StdReportModel, StdEducationalModel
+from accounts.mixin import UserLoginRequiredMixin, UserAuthorizationMixin
 
 from information.models import (StdInfoModel, FatherInfoModel, MatherInfoModel, SupervisorInfoModel, StdLastSchoolModel,
                                 StdCompetitionsModel, StdShadModel, StdPlaceInfoModel)
@@ -137,6 +134,7 @@ class StdList(UserAuthorizationMixin, ListView):
         search_fields['page'] = self.request.GET.get('page')
 
         return search_fields
+
     def get_current_url(self):
         url = "?"
         search_fields = self.get_search_value()
@@ -192,7 +190,7 @@ class StudentInfo(UserAuthorizationMixin, TemplateView):
         mather, mather_status = MatherInfoModel.objects.get_or_create(student=student)
         supervisor, supervisor_status = SupervisorInfoModel.objects.get_or_create(student=student)
         lastschool, lastschool_status = StdLastSchoolModel.objects.get_or_create(student=student)
-        competitions, competitions_status =StdCompetitionsModel.objects.get_or_create(student=student)
+        competitions, competitions_status = StdCompetitionsModel.objects.get_or_create(student=student)
         shad, shad_status = StdShadModel.objects.get_or_create(student=student)
         place, place_status = StdPlaceInfoModel.objects.get_or_create(student=student)
 
@@ -228,51 +226,24 @@ class GroupUpload(UserAuthorizationMixin, FormView):
         return super().form_valid(form)
 
 
-@login_required(redirect_field_name=REDIRECT_FIELD_NAME) 
-def reset_password_view(request):
-    context={}
-    if request.method == "POST":
-        rp_form = ResetPassWord(request.POST)
-        user = request.user
-        if rp_form.is_valid():
-            last_password =  rp_form.cleaned_data['last_password']
-            new_password =   rp_form.cleaned_data['new_password']
-            Confirm_password =   rp_form.cleaned_data['Confirm_password']
-        
-            authenticate_user = authenticate(request, username=user.username, password=last_password)
-        
-            if (authenticate_user is not None) and \
-                (new_password == Confirm_password) and \
-                (new_password != last_password):
-                    
-                try:
-                    user.set_password(new_password)
-                    user.save()
-                    context['notice'] = "رمز عبور با موفقیت تغییر کرد"
-                except:
-                    context['erro_text'] = "یک اشتباهی رخ داده است"
-                    
-               
-                
-            else:
-                context['erro_text'] = "اطلاعات وارد شده غلط میباشد"
-            
-        else:
-            context['erro_text'] = "یک اشتباهی رخ داده است"
-            
-        
-    
-    else:
-        rp_form = ResetPassWord()
-        
-        
-    context['form'] = rp_form
-    return render(request,'accounts/profile-reset-password.html', context)
+class ResetPassword(UserLoginRequiredMixin, FormView):
+    success_url = reverse_lazy('accounts:reset-password')
+    form_class = ResetPassWord
+    template_name = 'accounts/reset-password.html'
+
+    def form_valid(self, form):
+        form.reset_password()
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
 
 
-def error_404_view(request, exception):
+def error_404_view(request, *args, **kwargs):
     return render(request, 'accounts/page-404.html')
 
 
-def error_403_view(request, exception):
+def error_403_view(request, *args, **kwargs):
     return render(request, 'base/page-403.html')
