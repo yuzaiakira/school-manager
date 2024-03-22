@@ -57,6 +57,7 @@ def account_view(request):
 
 class HomeAccount(View):
     template_name = "accounts/home.html"
+    staff_template_name = "accounts/home-staff.html"
 
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
@@ -72,10 +73,14 @@ class HomeAccount(View):
         return render(request, self.template_name, context)
 
     def admin(self, request):
-        return render(request, self.template_name)
+
+        return render(request, self.staff_template_name, self.get_context_data())
 
     def get_context_data(self):
-        return dict()
+        context = {
+            'blog': None
+        }
+        return context
 
 
 class Login(LoginView):

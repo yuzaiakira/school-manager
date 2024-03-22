@@ -8,13 +8,12 @@ from azbankgateways.urls import az_bank_gateways_urls
 app_name = "accounts"
 
 urlpatterns = [
-    path('', views.account_view, name='home'),
+    path('', views.HomeAccount.as_view(), name='home'),
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page=app_name+':login'), name='logout'),
     path('search/', views.StdList.as_view(), name='search'),
 
     path('form/', include('information.urls')),
-    path('summernote/', include('django_summernote.urls')),
     path('bankgateways/', az_bank_gateways_urls()),
     path('', include('payments.urls')),
 
@@ -32,5 +31,7 @@ urlpatterns = [
     path('profile/', include([
         path('reset-password/', views.ResetPassword.as_view(), name='reset-password'),
     ])),
+
+
 
 ]

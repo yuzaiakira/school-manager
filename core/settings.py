@@ -148,7 +148,7 @@ JALALI_DATE_DEFAULTS = {
 
 MEDIA_URL = "/upload/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "upload")
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 
 
 AUTH_USER_MODEL = 'accounts.UserModel'
@@ -158,9 +158,14 @@ LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('accounts:home')
 REDIRECT_FIELD_NAME = 'redirect'
 
+# https://github.com/summernote/django-summernote
 SUMMERNOTE_CONFIG = {
     'attachment_upload_to': path_and_rename,
+    'summernote': {
+        'lang': 'fa-IR',
+    },
 }
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # for payment
 USE_X_FORWARDED_HOST = True
