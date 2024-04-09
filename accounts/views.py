@@ -1,15 +1,15 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
-
 
 from accounts.forms import (StdSearchForm, StdUploadGroupForm, ResetPassWord, UserForm)
 from accounts.models import StdGroupModel, StdReportModel, StdEducationalModel
@@ -37,7 +37,7 @@ def account_view(request):
         name = request.user.first_name + " " + request.user.last_name
         
     post = PostModel.objects.all().order_by('-id')
-    paginator = Paginator(post, 10)    
+    paginator = Paginator(post, 10)
     result = paginator.page(1)
     
     context = {
@@ -55,15 +55,16 @@ def account_view(request):
     return render(request, "accounts/home.html", context)
 
 
-class HomeAccount(View):
+class HomeAccount(UserLoginRequiredMixin, View):
     template_name = "accounts/home.html"
     staff_template_name = "accounts/home-staff.html"
 
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
             return self.admin(request)
-
-        return self.client(request)
+        elif request.user.is_authenticated:
+            return self.client(request)
+        raise PermissionDenied
 
     def client(self, request):
         context = self.get_context_data()
@@ -76,9 +77,13 @@ class HomeAccount(View):
 
         return render(request, self.staff_template_name, self.get_context_data())
 
+
     def get_context_data(self):
+        post = PostModel.objects.all().order_by('-updated_on', '-id').only('title', 'updated_on', 'author')
+        post_paginator = Paginator(post, 10)
+
         context = {
-            'blog': None
+            'blog': post_paginator.page(1)
         }
         return context
 

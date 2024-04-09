@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from django.urls import reverse_lazy
-from blog.functions import path_and_rename
 
 from .local_settings import *
 
@@ -36,7 +35,7 @@ INSTALLED_APPS = [
     'django_jalali',
     'jalali_date',
     'multiselectfield',
-    'django_summernote',
+    'ckeditor',
     'azbankgateways',
     'accounts.apps.AccountsConfig',
     'information.apps.InformationConfig',
@@ -158,14 +157,15 @@ LOGIN_URL = reverse_lazy('accounts:login')
 LOGIN_REDIRECT_URL = reverse_lazy('accounts:home')
 REDIRECT_FIELD_NAME = 'redirect'
 
-# https://github.com/summernote/django-summernote
-SUMMERNOTE_CONFIG = {
-    'attachment_upload_to': path_and_rename,
-    'summernote': {
-        'lang': 'fa-IR',
+# https://github.com/django-ckeditor/django-ckeditor
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 600,
+        'width': '100%',
     },
 }
-X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # for payment
 USE_X_FORWARDED_HOST = True

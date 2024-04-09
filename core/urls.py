@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-from django.urls import path,include
+from django.urls import path, include
 from django.contrib import admin
 
 from django.conf import settings
@@ -29,13 +29,10 @@ urlpatterns = [
     path('account/', include('accounts.urls')),
     path('blog/', include('blog.urls')),
     path('admin/', admin.site.urls),
-    path('summernote/', include('django_summernote.urls')),
-
-
 ]
 
 if DEBUG:
-    urlpatterns  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     
 handler404 = 'accounts.views.error_404_view'
 handler403 = 'accounts.views.error_403_view'

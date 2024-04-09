@@ -1,20 +1,18 @@
 from django.contrib import admin
 from .models import PostModel
-from django_summernote.admin import SummernoteModelAdmin
+from blog.forms import PostForm
 
 
-class PostAdmin(SummernoteModelAdmin):
-    summernote_fields = ('content',)
-    
-    # list_display = ('title', 'author')
-    # fieldsets = [
-    #     (None, {'fields': [('title', 'content', 'pic')]}),
-    # ]
-    #
-    # def save_model(self, request, obj, form, change):
-    #     if getattr(obj, 'author', None) is None:
-    #         obj.author = request.user
-    #     obj.save()
+class PostAdmin(admin.ModelAdmin):
+    form = PostForm
+    list_display = ('title', 'author', 'updated_on', 'created_on')
+    list_filter = ('updated_on', 'created_on')
+    search_fields = ('title', 'author',)
+    ordering = ('-updated_on', '-id')
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'author', None) is None:
+            obj.author = request.user
+        obj.save()
 
 
 admin.site.register(PostModel, PostAdmin)

@@ -1,10 +1,11 @@
+from django.views.generic.detail import DetailView
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 
 from core.settings import REDIRECT_FIELD_NAME
 from blog.models import PostModel
-
+from accounts.mixin import UserLoginRequiredMixin
 
 @login_required(redirect_field_name=REDIRECT_FIELD_NAME)
 def blog_view(request):
@@ -28,3 +29,8 @@ def post_view(request, post_id):
     post = get_object_or_404(PostModel, pk=post_id)
     
     return render(request, "blog/post.html", {'post': post})
+
+
+class BlogDetail(UserLoginRequiredMixin, DetailView):
+    model = PostModel
+    template_name = 'blog/blog-detail.html'

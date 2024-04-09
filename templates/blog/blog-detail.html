@@ -1,0 +1,87 @@
+{% extends "base/main.html" %}
+{% load jformat %}
+{% block title %}{{ object.title }}{% endblock %}
+{% block content %}
+{% block style %}
+    <style>
+        .blog-thumbnail {
+            display: block;
+            height: 499px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .blog-thumbnail img {
+            height: 100%;
+        }
+    </style>
+
+{% endblock %}
+<div class="content-wrapper" style="min-height: 1302.12px;">
+  <section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-12">
+              <ol class="breadcrumb float-left">
+                <li class="breadcrumb-item">
+                  <a href="{% url 'home' %}">
+                    خانه
+                  </a>
+                </li>
+                <li class="breadcrumb-item">
+                  <a href="{% url 'blog:blog-list' %}">
+                    نشریه ها
+                  </a>
+                </li>
+                <li class="breadcrumb-item active">
+                  {{ object.title }}
+                </li>
+              </ol>
+            </div>
+        </div>
+    </div>
+  </section>
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-md-12">
+          <div class="card card-primary card-outline">
+            <div class="card-header" style="border:0">
+
+            </div>
+            <div class="card-body p-0">
+              <div class="mailbox-read-info">
+                <h1>
+                  {{ object.title }}
+                </h1>
+              </div>
+              <div class="blog-thumbnail">
+               <img src="{{ object.get_pic_url }}" alt="{{ object.title }}">
+              </div>
+              <div class="mailbox-read-message">
+                {{ object.content|safe }}
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <div class="float-left">
+                <span>
+                  <i class="fas fa-clock">
+                  </i>
+                  تاریخ اپدیت: {{ object.updated_on|jformat:"%Y/%m/%d"  }}
+                </span>
+                  |
+                <span>
+                  <i class="fas fa-user">
+                  </i>
+                  نویسنده: {{ object.author.site_display_name }}
+                </span>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock %}
