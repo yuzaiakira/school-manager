@@ -58,6 +58,7 @@ def account_view(request):
 class HomeAccount(UserLoginRequiredMixin, View):
     template_name = "accounts/home.html"
     staff_template_name = "accounts/home-staff.html"
+    blog_count = 20
 
     def get(self, request, *args, **kwargs):
         if request.user.is_staff:
@@ -77,13 +78,11 @@ class HomeAccount(UserLoginRequiredMixin, View):
 
         return render(request, self.staff_template_name, self.get_context_data())
 
-
     def get_context_data(self):
-        post = PostModel.objects.all().order_by('-updated_on', '-id').only('title', 'updated_on', 'author')
-        post_paginator = Paginator(post, 10)
 
         context = {
-            'blog': post_paginator.page(1)
+            'blog': PostModel.objects.all().order_by('-updated_on', '-id').only('title', 'updated_on',
+                                                                                'author')[:self.blog_count]
         }
         return context
 

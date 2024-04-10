@@ -3,23 +3,9 @@
     <div class="card-header">
       <h3 class="card-title font-weight-bold">نشریه مدرسه</h3>
       <div class="card-tools">
-        <ul class="pagination pagination-sm float-right">
-          <li class="page-item">
-            <a class="page-link" href="#">«</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">1</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">3</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">»</a>
-          </li>
-        </ul>
+        {% if page_obj.has_previous or page_obj.has_next %}
+            {% include 'base/include/blog-pagination-item.html' %}
+        {% endif %}
       </div>
     </div>
     <div class="card-body p-0">
@@ -40,9 +26,11 @@
                 <td>{{ post.author.site_display_name }}</td>
               </tr>
             {% endfor %}
-            <tr>
-            <td colspan="4" class="text-center font-weight-bold"><a href="{% url 'blog:blog-list' %}"> نمایش بیشتر</a></td>
-          </tr>
+            {% if not page_obj%}
+              <tr>
+                <td colspan="4" class="text-center font-weight-bold"><a href="{% url 'blog:blog-list' %}"> نمایش بیشتر</a></td>
+              </tr>
+            {% endif %}
         {% else %}
 
           <tr>
